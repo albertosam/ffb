@@ -8,6 +8,10 @@ export interface Conjunto {
   [key: string]: string[];
 }
 
+export interface Status {
+  [key: string]: boolean;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -16,6 +20,7 @@ export class PrimeiroService {
   private regras: Regra[];
   private primeiros: Conjunto = {};
   private terminais: string[];
+  private pilhaDeBusca: boolean[] = [];
 
   constructor() { }
 
@@ -24,6 +29,7 @@ export class PrimeiroService {
 
     regras.forEach(a => {
       this.primeiros[a.variavel] = [];
+      this.pilhaDeBusca[a.variavel] = [];
     });
 
 
@@ -38,6 +44,14 @@ export class PrimeiroService {
   }
 
   private buscarPrimeiro(sequencial: number, atual: Regra) {
+
+    if (this.pilhaDeBusca[atual.variavel] == true) {
+      debugger;
+      // return;
+      throw 'Infinite Loop';
+    }
+
+    this.pilhaDeBusca[atual.variavel] = true;
 
     // navega nas sentenças
     for (let i = 0; i < atual.cadeias.length; i++) {
@@ -61,6 +75,8 @@ export class PrimeiroService {
         }
       }
     }
+
+    this.pilhaDeBusca[atual.variavel] = false;
   }
 
   private empilhar(array: string[], valor: string[]): string[] {

@@ -1,18 +1,59 @@
 <div class="card">
     <div class="card-header">
-        First
-      </div>
+        Gramática
+    </div>
     <div class="card-body">
 
-
         <div class="form-group">
-
-            <label for="">Expressão</label>
-
-            <textarea class="form-control" rows="10" [(ngModel)]="entrada"></textarea>
-
+            <label for="">Selecione</label>
+            <select name="" id="" class="form-control" (change)="selecionar($event)">
+                <option value="-1">Selecione</option>
+                <option value="1">Exemplo 1</option>
+                <option value="2">Exemplo 2</option>
+                <option value="3">Exemplo 3</option>
+            </select>
         </div>
 
-        <button type="button" class="btn btn-primary" (click)="processar()">Processar</button>
+        <div class="form-group">
+            <label for="">Expressão</label>
+            <textarea class="form-control" rows="10" [(ngModel)]="entrada"></textarea>
+        </div>
+
+        <button type="button" class="btn btn-primary" (click)="processar()"
+            [disabled]="entrada.length == 0">Processar</button>
+
+        <p class="card-text mt-3"><small>Para token <i>LAMBDA</i> utilize <i>%</i></small></p>
     </div>
+
+
+    <div class="m-3" *ngIf="erro.length != 0">
+        <ngb-alert type="danger">{{ erro }}</ngb-alert>
+    </div>
+</div>
+<div *ngIf="erro.length == 0">
+    <ul ngbNav #nav="ngbNav" class="p-3 nav-pills">
+        <li ngbNavItem>
+            <a ngbNavLink>Primeiros</a>
+            <ng-template ngbNavContent>
+
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <th class="variavel">Variável</th>
+                        <th>Valores</th>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of primeiros">
+                            <td class="variavel">{{item.variavel}}</td>
+                            <td>{{item.valores}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </ng-template>
+        </li>
+        <li ngbNavItem>
+            <a ngbNavLink>Second</a>
+            <ng-template ngbNavContent>Second content</ng-template>
+        </li>
+    </ul>
+    <div class="ml-3 mr-3" [ngbNavOutlet]="nav"></div>
 </div>

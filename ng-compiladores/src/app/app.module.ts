@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { RouterModule } from '@angular/router';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -14,7 +15,8 @@ import { RouterModule } from '@angular/router';
     AppRoutingModule,
     RouterModule.forRoot([
       { path: 'll1', loadChildren: () => import('./ll1/ll1.module').then(a => a.Ll1Module) }
-    ])
+    ]),
+    NgbModule
   ],
   providers: [],
   bootstrap: [AppComponent]
