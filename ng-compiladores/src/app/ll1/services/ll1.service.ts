@@ -156,7 +156,7 @@ export class Ll1Service {
     if (this.gramatica.indices[1].variavel == variavel)
       resultado = ['$'];
 
-    for (let i = 1; i <= this.gramatica.indices.length; i++) {
+    for (let i = 1; i <= this.gramatica.tamanho; i++) {
       const atual = this.gramatica.indices[i];
       let encontrado = false;
 
@@ -164,7 +164,7 @@ export class Ll1Service {
         const token = atual.tokens[j];
         if (token.texto === variavel) {
           encontrado = true;
-          if (j == atual.tokens.length - 1 && atual.variavel !== token.texto) {
+          if (j == atual.tokens.length - 1 && atual.variavel != token.texto) {
             let seguinte = this.getSeguinte(atual.variavel, variavelInicial, false);
             resultado = this.incluirValores(resultado, seguinte);
           }

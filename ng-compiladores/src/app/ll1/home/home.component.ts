@@ -12,6 +12,7 @@ export class HomeComponent implements OnInit {
   erro: string = '';
   entrada: string = '';
   primeiros: { variavel: string, valores: string }[] = [];
+  seguintes: { variavel: string, valores: string }[] = [];
   exemplos: any = {
     '1': `E -> T E’\nE’ -> + T E’ | %\nT -> F T’\nT’ -> * F T’ | %\nF -> ( E ) | id`,
     '2': `S -> A B d\nA -> a A | %\nB -> b B | c A | A C\nC -> c B | %`,
@@ -42,6 +43,7 @@ export class HomeComponent implements OnInit {
       variaveis.forEach(variavel => {
         let regra = gramatica.regras[variavel];
         this.primeiros.push({ variavel: variavel, valores: regra.primeiros.join(',') });
+        this.seguintes.push({ variavel: variavel, valores: regra.seguintes.join(',') });
       });
     }
     catch (error) {
