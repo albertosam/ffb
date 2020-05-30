@@ -11,6 +11,7 @@
                 <option value="1">Exemplo 1</option>
                 <option value="2">Exemplo 2</option>
                 <option value="3">Exemplo 3</option>
+                <option value="4">Exemplo 4</option>
             </select>
         </div>
 
@@ -33,17 +34,17 @@
 <div *ngIf="erro.length == 0">
     <ul ngbNav #nav="ngbNav" class="p-3 nav-pills">
         <li ngbNavItem>
-            <a ngbNavLink>Primeiros</a>
+            <a ngbNavLink>First</a>
             <ng-template ngbNavContent>
 
                 <table class="table table-bordered table-striped">
                     <thead>
-                        <th class="variavel">Variável</th>
+                        <th class="w-1 center">Variável</th>
                         <th>Valores</th>
                     </thead>
                     <tbody>
                         <tr *ngFor="let item of primeiros">
-                            <td class="variavel">{{item.variavel}}</td>
+                            <td class="w-1 center">{{item.variavel}}</td>
                             <td>{{item.valores}}</td>
                         </tr>
                     </tbody>
@@ -51,23 +52,56 @@
             </ng-template>
         </li>
         <li ngbNavItem>
-            <a ngbNavLink>Seguintes</a>
+            <a ngbNavLink>Follow</a>
             <ng-template ngbNavContent>
 
                 <table class="table table-bordered table-striped">
                     <thead>
-                        <th class="variavel">Variável</th>
+                        <th class="w-1 center">Variável</th>
                         <th>Valores</th>
                     </thead>
                     <tbody>
                         <tr *ngFor="let item of seguintes">
-                            <td class="variavel">{{item.variavel}}</td>
-                            <td>{{item.valores}}</td>
+                            <td class="w-1 center">{{item.variavel}}</td>
+                            <td> {{item.valores}}</td>
                         </tr>
                     </tbody>
                 </table>
             </ng-template>
         </li>
+        <li ngbNavItem>
+            <a ngbNavLink>Tabela</a>
+            <ng-template ngbNavContent>
+
+                <table class="table table-bordered table-striped">                
+                    <thead>
+                        <th class="w-1 center">Indice</th>
+                        <th>Expressão</th>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let linha of gramatica.indices; let i = index;">
+                            <td class="w-1 center">{{i}}</td>
+                            <td>{{linha?.variavel}} -> {{linha?.texto}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="table table-bordered table-striped">                
+                    <thead>
+                        <th></th>                        
+                        <th class="w-1 center" *ngFor="let coluna of gramatica.terminais">{{coluna}}</th>                        
+                    </thead>
+
+                    <tbody>                        
+                        <tr *ngFor="let variavel of gramatica.variaveis">
+                            <td class="w-1 center">{{variavel}}</td>
+                            <td class="w-1 center" *ngFor="let coluna of gramatica.terminais">{{gramatica.tabela[variavel][coluna] || ' - '}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </ng-template>
+        </li>
+
     </ul>
     <div class="ml-3 mr-3" [ngbNavOutlet]="nav"></div>
 </div>

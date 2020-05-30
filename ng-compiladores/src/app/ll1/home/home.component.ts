@@ -16,8 +16,11 @@ export class HomeComponent implements OnInit {
   exemplos: any = {
     '1': `E -> T E’\nE’ -> + T E’ | %\nT -> F T’\nT’ -> * F T’ | %\nF -> ( E ) | id`,
     '2': `S -> A B d\nA -> a A | %\nB -> b B | c A | A C\nC -> c B | %`,
-    '3': `S -> A | B\nA -> a A S | B D\nB -> b B | f A C | %\nC -> c C | B D\nD -> g D | C | %`
+    '3': `S -> A | B\nA -> a A S | B D\nB -> b B | f A C | %\nC -> c C | B D\nD -> g D | C | %`,
+    '4': `exp -> term exp'\nexp' -> soma term exp' | %\nsoma -> + | -\nterm -> fator term'\nterm' -> mult fator term' | %\nmult -> *\nfator -> ( exp ) | num`
   }
+
+  gramatica: any;
 
   constructor(private conversor: ConversorService,
     private primeiroService: PrimeiroService,
@@ -36,11 +39,11 @@ export class HomeComponent implements OnInit {
     this.seguintes = [];
 
     try {
-      let gramatica = this.ll1Service.construir(this.entrada);
-      let variaveis = gramatica.variaveis;      
+      this.gramatica = this.ll1Service.construir(this.entrada);
+      let variaveis = this.gramatica.variaveis;      
 
       variaveis.forEach(variavel => {
-        let regra = gramatica.regras[variavel];
+        let regra = this.gramatica.regras[variavel];
         this.primeiros.push({ variavel: variavel, valores: regra.first.join(',') });
         this.seguintes.push({ variavel: variavel, valores: regra.follow.join(',') });
       });

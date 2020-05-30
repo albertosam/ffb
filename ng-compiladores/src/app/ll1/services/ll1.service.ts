@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ConversorService } from './conversor.service';
 import { Regra } from '../modelos/regra';
+import { variable } from '@angular/compiler/src/output/output_ast';
 
 export interface Token {
   isVariavel: boolean;
@@ -20,10 +21,10 @@ export interface Gramatica {
   regras: { [key: string]: GramaticaRegra };
   indices: Indice[]
   tamanho: number;
+  tabela: any[];
 }
 
 export interface Indice {
-  //[key: string]: any;
   texto: string;
   tokens: Token[];
   variavel: string;
@@ -41,7 +42,7 @@ export class Ll1Service {
   public construir(gramaticaTexto: string): Gramatica {
     this.construirObjetoGramatica(gramaticaTexto);
     this.identificarFirstFollow();
-
+    this.construirTabela();
     return this.gramatica;
   }
 
@@ -49,7 +50,7 @@ export class Ll1Service {
   private construirObjetoGramatica(gramaticaTexto: string) {
     let cont = 1;
 
-    this.gramatica = { variaveis: [], indices: [], regras: {}, terminais: [], tamanho: 0 };
+    this.gramatica = { variaveis: [], indices: [], regras: {}, terminais: [], tamanho: 0, tabela: [] };
     gramaticaTexto.split('\n').forEach(linha => {
 
       linha = linha.trim();
@@ -62,8 +63,6 @@ export class Ll1Service {
 
       let variavel = expressoes[0].trim();
       let definicao = expressoes[1].trim();
-
-
 
       let partes = definicao.split('|');
       let partesIndexes = [];
@@ -107,7 +106,7 @@ export class Ll1Service {
 
   private identificarFirstFollow() {
     this.gramatica.variaveis.forEach(variavel => {
-      this.gramatica.regras[variavel].first = this.getConjuntoFirst(variavel);    
+      this.gramatica.regras[variavel].first = this.getConjuntoFirst(variavel);
 
       this.pilhaDeBusca = [];  // limpa pilha de variáveis buscadas
       this.gramatica.regras[variavel].follow = this.getConjuntoFollow(variavel, variavel, true);
@@ -255,5 +254,58 @@ export class Ll1Service {
     });
 
     return array;
+  }
+
+  private construirTabela() {
+    let tabela: any[] = [];
+
+    this.gramatica.variaveis.forEach((variavel) => {
+      tabela[variavel] = [];
+
+      this.gramatica.terminais.forEach((terminal) => {
+
+        if (this.gramatica.regras[variavel].first.includes(terminal)) {
+          let indice = this.getIndice(variavel, terminal);
+          tabela[variavel][terminal] = indice;
+        } else if (this.gramatica.regras[variavel].follow.includes(terminal)) {
+          if (this.gramatica.regras[variavel].first.includes('%')) {
+            let indice = this.getIndice(variavel, '%');
+            tabela[variavel][terminal] = indice;
+          }
+        } else {
+          tabela[variavel][terminal] = null;
+        }
+
+      });
+
+    });
+
+    this.gramatica.tabela = tabela;
+  }
+
+  private getIndice(variavel: string, terminal: string) {
+    let saida: number;
+
+    for (let i = 0; i < this.gramatica.regras[variavel].partes.length; i++) {
+      let parte = this.gramatica.regras[variavel].partes[i];
+
+      for (let j = 0; j < this.gramatica.indices[parte].tokens.length; j++) {
+        let token = this.gramatica.indices[parte].tokens[j];
+        if (!token.isVariavel) {
+          if (token.texto == terminal) {
+            saida = parte;
+          }
+          break;
+        } else {
+          var primeiros = this.gramatica.regras[token.texto].first;
+          if (primeiros.indexOf(terminal) !== -1) {
+            saida = parte;
+          }
+          break;
+        }
+      }
+    }
+
+    return saida;
   }
 }
