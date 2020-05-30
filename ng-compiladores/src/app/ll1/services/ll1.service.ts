@@ -10,8 +10,8 @@ export interface Token {
 export interface GramaticaRegra {
   texto: string;
   partes: number[];
-  primeiros: string[];
-  seguintes: string[];
+  first: string[];
+  follow: string[];
 }
 
 export interface Gramatica {
@@ -34,18 +34,19 @@ export interface Indice {
 })
 export class Ll1Service {
   private gramatica: Gramatica;
+  private pilhaDeBusca: string[];
 
   constructor(private conversor: ConversorService) { }
 
   public construir(gramaticaTexto: string): Gramatica {
-    this.construirGramatica(gramaticaTexto);
-    this.identificarPrimeirosSeguintes();
+    this.construirObjetoGramatica(gramaticaTexto);
+    this.identificarFirstFollow();
 
     return this.gramatica;
   }
 
 
-  private construirGramatica(gramaticaTexto: string) {
+  private construirObjetoGramatica(gramaticaTexto: string) {
     let cont = 1;
 
     this.gramatica = { variaveis: [], indices: [], regras: {}, terminais: [], tamanho: 0 };
@@ -81,7 +82,7 @@ export class Ll1Service {
         cont++;
       });
 
-      this.gramatica.regras[variavel] = { texto: definicao, partes: partesIndexes, primeiros: [], seguintes: [] };
+      this.gramatica.regras[variavel] = { texto: definicao, partes: partesIndexes, first: [], follow: [] };
       this.gramatica.variaveis.push(variavel);
     });
 
@@ -104,15 +105,30 @@ export class Ll1Service {
     }
   }
 
-  private identificarPrimeirosSeguintes() {
+  private identificarFirstFollow() {
     this.gramatica.variaveis.forEach(variavel => {
-      this.gramatica.regras[variavel].primeiros = this.getPrimeiro(variavel);
-      debugger;
-      this.gramatica.regras[variavel].seguintes = this.getSeguinte(variavel, variavel, true);
+      this.gramatica.regras[variavel].first = this.getConjuntoFirst(variavel);    
+
+      this.pilhaDeBusca = [];  // limpa pilha de variáveis buscadas
+      this.gramatica.regras[variavel].follow = this.getConjuntoFollow(variavel, variavel, true);
     });
   }
 
-  private getPrimeiro(variavel: string): string[] {
+
+  /**
+   * αƐß
+   * 
+   * 0) First(Ɛ) = {Ɛ}
+   * 1) Fisrt(a) = {a} onde a é terminal
+   * 2) A -> aα , então First(A) = {a} sendo a terminal
+   * 3) A -> Bα , então First(A) = First(B) , onde B não deriva em Ɛ
+   * 4) A -> Bα , então First(A) = {First(B) - Ɛ} U {First(α)} , onde B deriva em Ɛ
+   * 
+   *  
+   * 
+   * @param variavel 
+   */
+  private getConjuntoFirst(variavel: string): string[] {
     var resultado: string[] = [];
 
     this.gramatica.regras[variavel].partes.forEach(parte => {
@@ -128,7 +144,7 @@ export class Ll1Service {
             break;
           }
 
-          let primeiros = this.getPrimeiro(token.texto);
+          let primeiros = this.getConjuntoFirst(token.texto);
           if (primeiros.join('').endsWith('%')) {
             if (i != this.gramatica.indices[parte].tokens.length - 1) {
               primeiros.splice(primeiros.length - 1, 1);
@@ -147,12 +163,33 @@ export class Ll1Service {
     return resultado;
   }
 
-  private getSeguinte(variavel: string, variavelInicial: string, inicio: boolean) {
+  /**
+   * αƐß
+   * 
+   * 1) Se S é inicial, então Follow(S) = {$}. $ Indica final da sentença.
+   * 2) A -> αXß , então Follow(X) = {Fisrt(ß) - Ɛ}
+   * 3) A -> αX ou A -> αXß , onde First(ß) contém Ɛ então Follow(X) contém Follow(A)
+   *    
+   * 
+   * @param variavel 
+   * @param variavelInicial 
+   * @param inicio 
+   */
+  private getConjuntoFollow(variavel: string, variavelInicial: string, inicio: boolean) {
     let resultado: string[] = [];
+
+    // se a variável que está buscando já está pilha de busca
+    // evitar loop infinito
+    if (this.pilhaDeBusca.includes(variavel))
+      return resultado;
+
+    // inclui variável na pilha de busca
+    this.pilhaDeBusca.push(variavel);
 
     if (variavel == variavelInicial && !inicio)
       return resultado;
 
+    // regra (1) - VARIAVEL é o não terminal inicial
     if (this.gramatica.indices[1].variavel == variavel)
       resultado = ['$'];
 
@@ -162,10 +199,14 @@ export class Ll1Service {
 
       for (let j = 0; j < atual.tokens.length; j++) {
         const token = atual.tokens[j];
+
+        // encontra variável em regra de produção
         if (token.texto === variavel) {
           encontrado = true;
+
+          // regra (2) - o conjunto FIRST do token seguinte, é adicionado ao conjunto FOLLOW(VARIAVEL)
           if (j == atual.tokens.length - 1 && atual.variavel != token.texto) {
-            let seguinte = this.getSeguinte(atual.variavel, variavelInicial, false);
+            let seguinte = this.getConjuntoFollow(atual.variavel, variavelInicial, false);
             resultado = this.incluirValores(resultado, seguinte);
           }
           continue;
@@ -177,10 +218,11 @@ export class Ll1Service {
             break;
           }
 
-          let primeiro = this.getPrimeiro(token.texto);
+          let primeiro = this.getConjuntoFirst(token.texto);
+          // regra (3) - FIRST contém Ɛ
           if (primeiro.join('').endsWith('%')) {
             if (j == atual.tokens.length - 1) {
-              let seguinte = this.getSeguinte(atual.variavel, variavelInicial, false);
+              let seguinte = this.getConjuntoFollow(atual.variavel, variavelInicial, false);
               resultado = this.incluirValores(resultado, seguinte);
             }
 

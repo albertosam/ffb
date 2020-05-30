@@ -16,7 +16,7 @@ export class HomeComponent implements OnInit {
   exemplos: any = {
     '1': `E -> T E’\nE’ -> + T E’ | %\nT -> F T’\nT’ -> * F T’ | %\nF -> ( E ) | id`,
     '2': `S -> A B d\nA -> a A | %\nB -> b B | c A | A C\nC -> c B | %`,
-    '3': `S -> A | B\nA -> a A S | BD\nB -> b B | f A C | %\nC -> cC | B D\nD -> g D | C | %`
+    '3': `S -> A | B\nA -> a A S | B D\nB -> b B | f A C | %\nC -> c C | B D\nD -> g D | C | %`
   }
 
   constructor(private conversor: ConversorService,
@@ -26,24 +26,23 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  selecionar(event: any) {
-    debugger;
+  selecionar(event: any) {    
     this.entrada = this.exemplos[event.target.value];
   }
 
   processar() {
     this.erro = '';
     this.primeiros = [];
+    this.seguintes = [];
 
     try {
       let gramatica = this.ll1Service.construir(this.entrada);
-      let variaveis = gramatica.variaveis;
-      debugger;
+      let variaveis = gramatica.variaveis;      
 
       variaveis.forEach(variavel => {
         let regra = gramatica.regras[variavel];
-        this.primeiros.push({ variavel: variavel, valores: regra.primeiros.join(',') });
-        this.seguintes.push({ variavel: variavel, valores: regra.seguintes.join(',') });
+        this.primeiros.push({ variavel: variavel, valores: regra.first.join(',') });
+        this.seguintes.push({ variavel: variavel, valores: regra.follow.join(',') });
       });
     }
     catch (error) {
