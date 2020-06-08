@@ -1,4 +1,6 @@
 import { Gramatica } from '../modelos/garmatica';
+import { getConjuntoFirst } from './first';
+import { getConjuntoFollow } from './follow';
 
 
 export function criarGramatica(texto: string) {
@@ -59,4 +61,71 @@ export function criarGramatica(texto: string) {
 
 
     return gramatica;
+}
+
+export function ehTerminal(gramatica: Gramatica, valor: string) {
+    return gramatica.terminais.includes(valor);
+}
+
+export function montarTabelaPreditiva(gramatica: Gramatica) {
+    let tabela: any[] = [];
+
+    gramatica.variaveis.forEach((variavel) => {
+        tabela[variavel] = [];
+
+        gramatica.terminais.forEach((terminal) => {
+
+            if (gramatica.regras[variavel].first.includes(terminal)) {
+                let indice = buscarIndice(gramatica, variavel, terminal);
+                tabela[variavel][terminal] = indice;
+            } else if (gramatica.regras[variavel].follow.includes(terminal)) {
+                if (gramatica.regras[variavel].first.includes('%')) {
+                    let indice = buscarIndice(gramatica, variavel, '%');
+                    tabela[variavel][terminal] = indice;
+                }
+            } else {
+                tabela[variavel][terminal] = null;
+            }
+
+        });
+
+    });
+
+    gramatica.tabela = tabela;
+}
+
+
+export function buscarIndice(gramatica: Gramatica, variavel: string, terminal: string) {
+    let saida: number;
+
+    for (let i = 0; i < gramatica.regras[variavel].partes.length; i++) {
+        let parte = gramatica.regras[variavel].partes[i];
+
+        for (let j = 0; j < gramatica.indices[parte].tokens.length; j++) {
+            let token = gramatica.indices[parte].tokens[j];
+            if (!token.isVariavel) {
+                if (token.texto == terminal) {
+                    saida = parte;
+                }
+                break;
+            } else {
+                var primeiros = gramatica.regras[token.texto].first;
+                if (primeiros.indexOf(terminal) !== -1) {
+                    saida = parte;
+                }
+                break;
+            }
+        }
+    }
+
+    return saida;
+}
+
+export function identificarFirstFollow(gramatica: Gramatica) {
+    gramatica.variaveis.forEach(variavel => {
+        gramatica.regras[variavel].first = getConjuntoFirst(variavel, gramatica);
+
+        let pilhaDeBusca = [];  // limpa pilha de variáveis buscadas
+        gramatica.regras[variavel].follow = getConjuntoFollow(variavel, variavel, true, gramatica, pilhaDeBusca);
+    });
 }

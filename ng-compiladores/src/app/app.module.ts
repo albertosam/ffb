@@ -14,6 +14,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     BrowserModule,
     AppRoutingModule,
     RouterModule.forRoot([
+      { path: '', redirectTo: 'll1', pathMatch: 'full' },
       { path: 'll1', loadChildren: () => import('./ll1/ll1.module').then(a => a.Ll1Module) }
     ]),
     NgbModule
