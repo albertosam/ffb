@@ -1,34 +1,6 @@
 import { Injectable } from '@angular/core';
-import { ConversorService } from './conversor.service';
-import { Regra } from '../modelos/regra';
-import { variable } from '@angular/compiler/src/output/output_ast';
+import { Gramatica } from '../modelos/garmatica';
 
-export interface Token {
-  isVariavel: boolean;
-  texto: string;
-
-}
-export interface GramaticaRegra {
-  texto: string;
-  partes: number[];
-  first: string[];
-  follow: string[];
-}
-
-export interface Gramatica {
-  variaveis: string[];
-  terminais: string[];
-  regras: { [key: string]: GramaticaRegra };
-  indices: Indice[]
-  tamanho: number;
-  tabela: any[];
-}
-
-export interface Indice {
-  texto: string;
-  tokens: Token[];
-  variavel: string;
-}
 
 @Injectable({
   providedIn: 'root'
@@ -37,7 +9,7 @@ export class Ll1Service {
   private gramatica: Gramatica;
   private pilhaDeBusca: string[];
 
-  constructor(private conversor: ConversorService) { }
+  constructor() { }
 
   public construir(gramaticaTexto: string): Gramatica {
     this.construirObjetoGramatica(gramaticaTexto);
@@ -50,7 +22,7 @@ export class Ll1Service {
   private construirObjetoGramatica(gramaticaTexto: string) {
     let cont = 1;
 
-    this.gramatica = { variaveis: [], indices: [], regras: {}, terminais: [], tamanho: 0, tabela: [] };
+    this.gramatica = { variaveis: [], indices: [], regras: {}, terminais: ['$'], tamanho: 0, tabela: [] };
     gramaticaTexto.split('\n').forEach(linha => {
 
       linha = linha.trim();
@@ -113,7 +85,6 @@ export class Ll1Service {
     });
   }
 
-
   /**
    * αƐß
    * 
@@ -134,6 +105,7 @@ export class Ll1Service {
       for (var i = 0; i < this.gramatica.indices[parte].tokens.length; i++) {
         let token = this.gramatica.indices[parte].tokens[i];
 
+        // regra (1) e (2) - FIRST de terminal é ele mesmo
         if (!token.isVariavel) {
           resultado = this.incluirValor(resultado, token.texto);
           break;
@@ -144,6 +116,8 @@ export class Ll1Service {
           }
 
           let primeiros = this.getConjuntoFirst(token.texto);
+
+          // regra (4) - conjunto FIRST deriva em Ɛ
           if (primeiros.join('').endsWith('%')) {
             if (i != this.gramatica.indices[parte].tokens.length - 1) {
               primeiros.splice(primeiros.length - 1, 1);
@@ -151,6 +125,7 @@ export class Ll1Service {
             resultado = this.incluirValores(resultado, primeiros);
             break;
           } else {
+            // regra (3) adiciona ao FIRST o FIRST do token atual que é variável
             resultado = this.incluirValores(resultado, primeiros);
             break;
           }

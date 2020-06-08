@@ -1,3 +1,16 @@
+<div class="jumbotron">
+    <h4 class="display-6">Antes de Começar!</h4>
+    <p class="lead">O algoritmo foi criado considerando que:</p>
+    <hr class="my-4">
+    <ul>
+        <li>Nas regras de produção da gramática os tokens devem ser separados por espaço</li>
+        <li>São identificadas como VARIAVEL todos os tokens à esquerda de <var>-></var> </li>
+        <li>Para representar o token <var>Ɛ</var> utilize <var>%</var> </li>
+        <li>O usuário pode selecionar uma das gramáticas sugeridas, podendo alterá-las, ou escrever uma nova na caixa de
+            texto</li>
+    </ul>
+</div>
+
 <div class="card">
     <div class="card-header">
         Gramática
@@ -12,6 +25,7 @@
                 <option value="2">Exemplo 2</option>
                 <option value="3">Exemplo 3</option>
                 <option value="4">Exemplo 4</option>
+                <option value="5">Exemplo 5</option>
             </select>
         </div>
 
@@ -20,10 +34,8 @@
             <textarea class="form-control" rows="10" [(ngModel)]="entrada"></textarea>
         </div>
 
-        <button type="button" class="btn btn-primary" (click)="processar()"
+        <button type="button" class="btn btn-success" (click)="processar()"
             [disabled]="entrada.length == 0">Processar</button>
-
-        <p class="card-text mt-3"><small>Para token <i>LAMBDA</i> utilize <i>%</i></small></p>
     </div>
 
 
@@ -31,8 +43,9 @@
         <ngb-alert type="danger">{{ erro }}</ngb-alert>
     </div>
 </div>
-<div *ngIf="erro.length == 0">
-    <ul ngbNav #nav="ngbNav" class="p-3 nav-pills">
+<div *ngIf="erro.length == 0 && processado" class="p-3">
+
+    <ul ngbNav #nav="ngbNav" class="nav-tabs">
         <li ngbNavItem>
             <a ngbNavLink>First</a>
             <ng-template ngbNavContent>
@@ -73,7 +86,7 @@
             <a ngbNavLink>Tabela</a>
             <ng-template ngbNavContent>
 
-                <table class="table table-bordered table-striped">                
+                <table class="table table-bordered table-striped">
                     <thead>
                         <th class="w-1 center">Indice</th>
                         <th>Expressão</th>
@@ -86,22 +99,101 @@
                     </tbody>
                 </table>
 
-                <table class="table table-bordered table-striped">                
+                <table class="table table-bordered table-striped">
                     <thead>
-                        <th></th>                        
-                        <th class="w-1 center" *ngFor="let coluna of gramatica.terminais">{{coluna}}</th>                        
+                        <th></th>
+                        <th class="w-1 center" *ngFor="let coluna of gramatica.terminais">{{coluna}}</th>
                     </thead>
 
-                    <tbody>                        
+                    <tbody>
                         <tr *ngFor="let variavel of gramatica.variaveis">
                             <td class="w-1 center">{{variavel}}</td>
-                            <td class="w-1 center" *ngFor="let coluna of gramatica.terminais">{{gramatica.tabela[variavel][coluna] || ' - '}}</td>
+                            <td class="w-1 center" *ngFor="let coluna of gramatica.terminais">
+                                {{gramatica.tabela[variavel][coluna] || ' - '}}</td>
                         </tr>
                     </tbody>
                 </table>
             </ng-template>
         </li>
+        <li ngbNavItem>
+            <a ngbNavLink>Parser</a>
+            <ng-template ngbNavContent>
 
+                <div class="row">
+                    <div class="col-3">
+                        <div class="form-group">
+                            <label for="">Selecione</label>
+                            <select name="" id="" class="form-control" (change)="selecionarParser($event)">
+                                <option value="-1">Selecione</option>
+                                <!-- <option value="1">Exemplo 1</option>
+                                    <option value="2">Exemplo 2</option>
+                                    <option value="3">Exemplo 3</option> -->
+                                <option value="4">Exemplo 4</option>
+                                <option value="5">Exemplo 5</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Expressão</label>
+                            <textarea class="form-control" rows="10" [(ngModel)]="validacao"></textarea>
+                        </div>
+
+                        <button type="button" class="btn btn-success" (click)="validar()"
+                            [disabled]="!validacao">Validar</button>
+                    </div>
+                    <div class="col-3">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <th class="w-1 center">Indice</th>
+                                <th>Expressão</th>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let linha of gramatica.indices; let i = index;">
+                                    <td class="w-1 center">{{i}}</td>
+                                    <td>{{linha?.variavel}} -> {{linha?.texto}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <th></th>
+                                <th class="w-1 center" *ngFor="let coluna of gramatica.terminais">{{coluna}}
+                                </th>
+                            </thead>
+
+                            <tbody>
+                                <tr *ngFor="let variavel of gramatica.variaveis">
+                                    <td class="w-1 center">{{variavel}}</td>
+                                    <td class="w-1 center" *ngFor="let coluna of gramatica.terminais">
+                                        {{gramatica.tabela[variavel][coluna] || ' - '}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <td>Entrada</td>
+                                <td>Pilha</td>
+                                <td>Topo</td>
+                                <td>Token</td>
+                                <td>Ação</td>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of logger">
+                                    <td class="right">{{item[0]}}</td>
+                                    <td class="right">{{item[1]}}</td>
+                                    <td>{{item[2]}}</td>
+                                    <td>{{item[3]}}</td>
+                                    <td>{{item[4]}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </ng-template>
+        </li>
     </ul>
-    <div class="ml-3 mr-3" [ngbNavOutlet]="nav"></div>
+    <div class="mt-3 ml-3 mr-3" [ngbNavOutlet]="nav"></div>
+
 </div>
