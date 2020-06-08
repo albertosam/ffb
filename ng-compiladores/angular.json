@@ -37,6 +37,7 @@
                   "with": "src/environments/environment.prod.ts"
                 }
               ],
+              "baseHref": "gentle-meadow-0640b1e0f.azurestaticapps.net",
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
