@@ -38,9 +38,6 @@ export class HomeComponent implements OnInit {
 
   selecionar(event: any) {
     this.entrada = this.exemplos[event.target.value];
-  }
-
-  selecionarParser(event: any) {
     this.validacao = this.exemploValidacao[event.target.value];
   }
 
@@ -59,6 +56,11 @@ export class HomeComponent implements OnInit {
         this.seguintes.push({ variavel: variavel, valores: regra.follow.join(',') });
       });
 
+      if (this.validacao) {
+        this.parser.validate(this.validacao, this.gramatica);
+        this.logger = this.parser.logger.toTable();
+      }
+
       this.processado = true;
     }
     catch (error) {
@@ -70,8 +72,7 @@ export class HomeComponent implements OnInit {
 
   validar() {
     debugger;
-    this.parser.validate(this.validacao, this.gramatica);
-    this.logger = this.parser.logger.toTable();
+
   }
 
 }

@@ -9,6 +9,7 @@ class Log1 {
 
 class Log {
   acao: string;
+  erro: boolean = false;
 
   constructor(public topo: string, public token: string, public cadeia: string, public pilha: string[]) {
   }
@@ -29,16 +30,22 @@ class Logger {
     this.passos = []
   }
 
-  addErro(ponteiro: number, mensagem: string) {
-    //this.passos[ponteiro].push()
+  addErro(ponteiro: number, topo: string, token: string, cadeia: string, pilha: string[], mensagem: string) {
+    let passo = new Log(topo, token, cadeia, pilha.map(a => a));
+    passo.acao = mensagem;
+    passo.erro = true;
+
+    this.log.push(passo);
+
+    return passo;
   }
 
   addLog(ponteiro: number, topo: string, token: string, cadeia: string, pilha: string[]) {
-    if (!this.passos[ponteiro])
-      this.passos[ponteiro] = [];
+    // if (!this.passos[ponteiro])
+    //   this.passos[ponteiro] = [];
 
     let passo = new Log(topo, token, cadeia, pilha.map(a => a));
-    this.passos[ponteiro].push({ log: passo, erro: false, erroMensagem: '' });
+    // this.passos[ponteiro].push({ log: passo, erro: false, erroMensagem: '' });
     this.log.push(passo);
 
     return passo;
@@ -54,6 +61,7 @@ class Logger {
       tabela[index][2] = this.log[index].topo;
       tabela[index][3] = this.log[index].token;
       tabela[index][4] = this.log[index].acao;
+      tabela[index][5] = this.log[index]?.erro;
     }
 
     return tabela;
@@ -75,6 +83,21 @@ export class Ll1ParserService {
   public logger: Logger = new Logger();
 
   constructor() { }
+
+  private addErro(topo: string, token: string) {
+    let first: string[] = [];
+
+    this.gramatica.regras[topo].first.forEach(function (item) {
+      if (item == '%') {
+        return;
+      }
+      first.push(item);
+    });
+
+    let mensagem = `O token ${token} é inválido. Os seguintes tokens eram esperados: ${first.join(', ')}`;
+    let passo = this.logger.addErro(this.ponteiro, topo, token, this.cadeia.filter((a, c, arrar) => c > this.ponteiro).join(''), this.pilha, mensagem);
+    return passo;
+  }
 
   private addLog(topo: string, token: string) {
     let passo = this.logger.addLog(this.ponteiro, topo, token, this.cadeia.filter((a, c, arrar) => c > this.ponteiro).join(''), this.pilha);
@@ -116,24 +139,32 @@ export class Ll1ParserService {
           continue;
         } else {
           this.pilha.pop();
-          this.logger.addErro(this.ponteiro, 'Token não é reconhecido');
-          continue;
+          this.addErro(topo, tokenAtual);
+
+          //continue;
+          break;
         }
       } else {
         var celula = this.gramatica.tabela[topo][tokenAtual];
         if (!celula) {
-          throw 'Verificar';
+          this.addErro(topo, tokenAtual);
+          break;
+          //throw 'Verificar';
         }
 
         this.pilha.pop();
+
+
         let indice = this.gramatica.indices[celula];
         var novosTokens = indice.tokens;
         passo.acao = indice.variavel.concat(' -> ').concat(indice.texto);
-
-        for (let index = novosTokens.length - 1; index >= 0; index--) {
-          let item = novosTokens[index].texto;
-          this.pilha.push(item);
+        if (novosTokens[0].texto != '%') {
+          for (let index = novosTokens.length - 1; index >= 0; index--) {
+            let item = novosTokens[index].texto;
+            this.pilha.push(item);
+          }
         }
+
       }
 
       if (!this.pilha.length)
@@ -141,8 +172,10 @@ export class Ll1ParserService {
 
       i++;
     }
-
   }
+
+
+
 
   private proximoToken(): string {
     if (this.ponteiro > this.cadeia.length)
