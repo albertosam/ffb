@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Gramatica } from '../modelos/garmatica';
+import { Gramatica } from '../modelos/gramatica';
 import { criarGramatica, identificarFirstFollow, montarTabelaPreditiva } from '../util/gramatica';
 import { incluirValores, incluirValor } from '../util/listas';
 import { validar } from '../util/validador';
@@ -25,4 +25,5 @@ export class Ll1Service {
   public validar(entrada: string) {
     return validar(entrada, this.gramatica);
   }
+  
 }

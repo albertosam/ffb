@@ -6,6 +6,7 @@
         <li>Nas regras de produção da gramática os tokens devem ser separados por espaço</li>
         <li>São identificadas como VARIAVEL todos os tokens à esquerda de <var>-></var> </li>
         <li>Para representar o token <var>Ɛ</var> utilize <var>%</var> </li>
+        <li>Cada linha deve conter uma única regra de produção</li>
         <li>O usuário pode selecionar uma das gramáticas sugeridas, podendo alterá-las, ou escrever uma nova na caixa de
             texto</li>
     </ul>
@@ -127,10 +128,13 @@
                                 <th>Expressão</th>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let linha of gramatica.indices; let i = index;">
-                                    <td class="w-1 center">{{i}}</td>
-                                    <td>{{linha?.variavel}} -> {{linha?.texto}}</td>
-                                </tr>
+                                <!-- *ngFor="let linha of gramatica.indices; let i = index;" -->
+                                <ng-template ngFor let-linha [ngForOf]="gramatica.indices" let-i="index">
+                                    <tr *ngIf="i>0">
+                                        <td class="w-1 center">{{i}}</td>
+                                        <td>{{linha?.variavel}} -> {{linha?.texto}}</td>
+                                    </tr>
+                                </ng-template>
                             </tbody>
                         </table>
 

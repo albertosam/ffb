@@ -1,4 +1,4 @@
-import { Gramatica } from '../modelos/garmatica';
+import { Gramatica } from '../modelos/gramatica';
 import { getConjuntoFirst } from './first';
 import { getConjuntoFollow } from './follow';
 

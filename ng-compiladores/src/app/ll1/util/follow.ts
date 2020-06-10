@@ -1,6 +1,6 @@
 import { incluirValores, incluirValor } from './listas';
 import { getConjuntoFirst } from './first';
-import { Gramatica } from '../modelos/garmatica';
+import { Gramatica } from '../modelos/gramatica';
 
 
 /**

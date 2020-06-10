@@ -1,11 +1,15 @@
-import { getConjuntoFollow } from '../util/follow';
-import { getConjuntoFirst } from '../util/first';
 
+/**
+ * Unidade mínima da minha gramática
+ */
 export interface Token {
     isVariavel: boolean;
     texto: string;
 }
 
+/**
+ * Conjunto de tokens que definem uma produção
+ */
 export interface GramaticaRegra {
     texto: string;
     partes: number[];
@@ -13,22 +17,19 @@ export interface GramaticaRegra {
     follow: string[];
 }
 
-export interface IGramatica {
-    variaveis: string[];
-    terminais: string[];
-    regras: { [key: string]: GramaticaRegra };
-    indices: Indice[]
-    tamanho: number;
-    tabela: any[];
-}
-
+/***
+ * Determina índice de expressões
+ */
 export interface Indice {
     texto: string;
     tokens: Token[];
     variavel: string;
 }
 
-export class Gramatica implements IGramatica {
+/**
+ * Implementação da gramática 
+ */
+export class Gramatica {
     variaveis: string[];
     terminais: string[];
     regras: { [key: string]: GramaticaRegra };

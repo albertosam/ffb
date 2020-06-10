@@ -1,4 +1,4 @@
-import { Gramatica } from '../modelos/garmatica';
+import { Gramatica } from '../modelos/gramatica';
 import { ehTerminal } from './gramatica';
 import { ValidadorLogger, Log } from './logger';
 
@@ -93,12 +93,12 @@ class Validador {
                 break;
         }
 
-        let passo = this.logger.addErro(this.ponteiro, topo, token, this.cadeia.filter((a, c, arrar) => c > this.ponteiro).join(''), this.pilha, mensagem);
+        let passo = this.logger.addErro(this.ponteiro, topo, token, this.cadeia.filter((a, c, arrar) => c >= this.ponteiro).join(''), this.pilha, mensagem);
         return passo;
     }
 
     addLog(topo: string, token: string) {
-        this.logAtual = this.logger.addLog(this.ponteiro, topo, token, this.cadeia.filter((a, c, arrar) => c > this.ponteiro).join(''), this.pilha);
+        this.logAtual = this.logger.addLog(this.ponteiro, topo, token, this.cadeia.filter((a, c, arrar) => c >= this.ponteiro).join(''), this.pilha);
     }
 }
 

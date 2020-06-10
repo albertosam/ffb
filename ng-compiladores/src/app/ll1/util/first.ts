@@ -1,4 +1,4 @@
-import { Gramatica } from '../modelos/garmatica';
+import { Gramatica } from '../modelos/gramatica';
 import { incluirValores, incluirValor } from './listas';
 
 /**
