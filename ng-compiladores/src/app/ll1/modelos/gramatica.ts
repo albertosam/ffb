@@ -33,7 +33,7 @@ export class Gramatica {
     variaveis: string[];
     terminais: string[];
     regras: { [key: string]: GramaticaRegra };
-    indices: Indice[]
+    indices: Indice[];
     tamanho: number;
     tabela: any[];
 
