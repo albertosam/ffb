@@ -25,6 +25,7 @@ class Validador {
     }
 
     popPilha() {
+        this.logAtual.mensagem = `desempilha ${this.pilha[this.pilha.length - 1]}`
         this.pilha.pop();
     }
 
@@ -80,7 +81,8 @@ class Validador {
                 if (!first)
                     throw 'Não encontrado FIRST para o token ' + first;
 
-                first.forEach(function (item) {
+                first = [];
+                this.gramatica.regras[topo].first.forEach(function (item) {
                     if (item == '%') {
                         return;
                     }
