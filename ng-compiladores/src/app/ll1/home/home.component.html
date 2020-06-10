@@ -89,14 +89,16 @@
 
                 <table class="table table-bordered table-striped">
                     <thead>
-                        <th class="w-1 center">Indice</th>
+                        <th class="w-1 center">Índice</th>
                         <th>Expressão</th>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let linha of gramatica.indices; let i = index;">
-                            <td class="w-1 center">{{i}}</td>
-                            <td>{{linha?.variavel}} -> {{linha?.texto}}</td>
-                        </tr>
+                        <ng-template ngFor let-linha [ngForOf]="gramatica.indices" let-i="index">
+                            <tr *ngIf="i>0">
+                                <td class="w-1 center">{{i}}</td>
+                                <td>{{linha?.variavel}} -> {{linha?.texto}}</td>
+                            </tr>
+                        </ng-template>
                     </tbody>
                 </table>
 
@@ -124,11 +126,10 @@
                     <div class="col-3">
                         <table class="table table-bordered table-striped">
                             <thead>
-                                <th class="w-1 center">Indice</th>
+                                <th class="w-1 center">Índice</th>
                                 <th>Expressão</th>
                             </thead>
                             <tbody>
-                                <!-- *ngFor="let linha of gramatica.indices; let i = index;" -->
                                 <ng-template ngFor let-linha [ngForOf]="gramatica.indices" let-i="index">
                                     <tr *ngIf="i>0">
                                         <td class="w-1 center">{{i}}</td>

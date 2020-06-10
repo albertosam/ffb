@@ -5,22 +5,18 @@ export const Combo: any[] = [
     { value: -1, text: 'Selecione' },
     { value: 1, text: 'Exemplo 1' },
     { value: 2, text: 'Exemplo 2' },
-    { value: 3, text: 'Exemplo 3' },
-    { value: 4, text: 'Exemplo 4' },
-    { value: 5, text: 'Exemplo 5' }
+    { value: 3, text: 'Exemplo 3' }
 ]
 
 export const GramaticasExemplo: any = {
     '1': `E -> T E’\nE’ -> + T E’ | %\nT -> F T’\nT’ -> * F T’ | %\nF -> ( E ) | id`,
     '2': `S -> A B d\nA -> a A | %\nB -> b B | c A | A C\nC -> c B | %`,
     '3': `S -> A | B\nA -> a A S | B D\nB -> b B | f A C | %\nC -> c C | B D\nD -> g D | C | %`,
-    '4': `exp -> term exp'\nexp' -> soma term exp' | %\nsoma -> + | -\nterm -> fator term'\nterm' -> mult fator term' | %\nmult -> *\nfator -> ( exp ) | num`,
-    '5': `S -> F | ( S + S )\nF -> a`
 }
 
 export const CodigosExemplo: any = {
-    '4': `( num - num ) * num`,
-    '5': `( ( a + a ) + a )`
+    '1': `( id + id )`,
+    '2': `a a b c d`
 }
 
 export function toFirstView(gramatica: Gramatica) {
