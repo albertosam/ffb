@@ -50,6 +50,8 @@ namespace Central.Api.Controllers
         [HttpPost("registrar")]
         public Task<Posicionamento> PostRegistrar([FromBody] string nome)
         {
+            Simulador.InicializarAmbienteControlado();
+
             var posicao = Simulador.RegistrarAgente(nome);
             return Task.FromResult(posicao.Parse());
         }

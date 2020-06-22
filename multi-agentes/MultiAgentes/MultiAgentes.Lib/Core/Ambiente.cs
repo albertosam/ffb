@@ -4,23 +4,23 @@ using System.Text;
 
 namespace MultiAgentes.Lib.Core
 {
-    public class Ambiente_
+    public class Ambiente
     {
-        public Ambiente_(int dimensao)
+        public Ambiente(int dimensao)
         {
             Dimensao = dimensao;
-            Posicoes = new Posicao_[dimensao, dimensao];
+            Posicoes = new Posicao[dimensao, dimensao];
         }
 
-        public Posicao_[,] Posicoes { get; set; }
-        public Posicao_ Atuador { get; set; }
+        public Posicao[,] Posicoes { get; set; }
+        public Posicao Atuador { get; set; }
         public int Dimensao { get; set; }
 
-        public static Ambiente_ Criar(int dimensao)
+        public static Ambiente Criar(int dimensao)
         {
             bool bordaCima, bordaEsquerda, bordaDireita, bordaBaixo = false;
 
-            var ambiente = new Ambiente_(dimensao);
+            var ambiente = new Ambiente(dimensao);
             for (int i = 0; i < dimensao; i++)
             {
                 for (int j = 0; j < dimensao; j++)
@@ -30,21 +30,21 @@ namespace MultiAgentes.Lib.Core
                     bordaDireita = j == dimensao - 1;
                     bordaBaixo = i == dimensao - 1;
 
-                    ambiente.Posicoes[i, j] = new Posicao_(ambiente, i, j, bordaCima, bordaEsquerda, bordaDireita, bordaBaixo);
+                    ambiente.Posicoes[i, j] = new Posicao(ambiente, i, j, bordaCima, bordaEsquerda, bordaDireita, bordaBaixo);
                 }
             }
 
             return ambiente;
         }
 
-        public Posicao_ SetPosicaoAgente(int x, int y)
+        public Posicao SetPosicaoAgente(int x, int y)
         {
             var posicao = this.Posicoes[x, y];
             this.Atuador = posicao;
             return posicao;
         }
 
-        public static void SujarAletorio(Ambiente_ ambiente, int qtdePosicoes)
+        public static void SujarAletorio(Ambiente ambiente, int qtdePosicoes)
         {
             var random = new Random();
             for (int i = 0; i < qtdePosicoes;)
@@ -60,7 +60,7 @@ namespace MultiAgentes.Lib.Core
             }
         }
 
-        public Posicao_ GetPosicao(int x, int y)
+        public Posicao GetPosicao(int x, int y)
         {
             if (x >= 0 && y >= 0)
                 if (x < Dimensao && y < Dimensao)
@@ -95,7 +95,7 @@ namespace MultiAgentes.Lib.Core
             return p;
         }
 
-        public Posicao_ Movimentar(Direcao direcao)
+        public Posicao Movimentar(Direcao direcao)
         {
             var x = this.Atuador.X;
             var y = this.Atuador.Y;

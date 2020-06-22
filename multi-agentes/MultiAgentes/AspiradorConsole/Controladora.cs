@@ -29,13 +29,6 @@ namespace AspiradorConsole
 
         public void MovimentarELimpar()
         {
-            // realiza limpeza
-            if (posicao.Limpo == false)
-            {
-                this.centralClient.LimpezaRealizada(posicao);
-                this.consolePrinter.Aspirado(posicao.X, posicao.Y);
-            }
-
             // seleciona posição
             var proximaPosicao = this.centralClient.ProximaPosicao();
             if (proximaPosicao == null)
@@ -52,6 +45,13 @@ namespace AspiradorConsole
                 this.posicao = this.centralClient.Movimentar((int)direcao);
 
                 this.consolePrinter.PosicaoAtual(posicao.X, posicao.Y);
+            }
+
+            // realiza limpeza
+            if (posicao.Limpo == false)
+            {
+                this.centralClient.LimpezaRealizada(posicao);
+                this.consolePrinter.Aspirado(posicao.X, posicao.Y);
             }
         }
 

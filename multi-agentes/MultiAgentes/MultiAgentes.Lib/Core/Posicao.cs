@@ -4,17 +4,17 @@ using System.Text;
 
 namespace MultiAgentes.Lib.Core
 {
-    public class Posicao_
+    public class Posicao
     {
-        private Ambiente_ ambiente;
+        private Ambiente ambiente;
         public int X { get; set; }
         public int Y { get; set; }
         public bool Ocupado { get; set; }
         public int Visitas { get; set; }
         public bool Limpo { get; set; }
 
-        public Posicao_() { }
-        public Posicao_(Ambiente_ ambiente, int x, int y,  bool bordaCima, bool bordaEsquerda, bool bordaDireita, bool bordaBaixo)
+        public Posicao() { }
+        public Posicao(Ambiente ambiente, int x, int y,  bool bordaCima, bool bordaEsquerda, bool bordaDireita, bool bordaBaixo)
         {
             this.ambiente = ambiente;
             Limpo = true;
@@ -35,9 +35,9 @@ namespace MultiAgentes.Lib.Core
         public bool BordaBaixo { get; set; }
         public int Limpezas { get; set; }
         public bool Ocupada { get; set; }
-        public Posicao_ VizinhoEsquerda { get => this.ambiente.GetPosicao(X, Y - 1); }
-        public Posicao_ VizinhoDireita { get => this.ambiente.GetPosicao(X, Y + 1); }
-        public Posicao_ VizinhoAcima { get => this.ambiente.GetPosicao(X - 1, Y); }
-        public Posicao_ VizinhoAbaixo { get => this.ambiente.GetPosicao(X + 1, Y); }
+        public Posicao VizinhoEsquerda { get => this.ambiente.GetPosicao(X, Y - 1); }
+        public Posicao VizinhoDireita { get => this.ambiente.GetPosicao(X, Y + 1); }
+        public Posicao VizinhoAcima { get => this.ambiente.GetPosicao(X - 1, Y); }
+        public Posicao VizinhoAbaixo { get => this.ambiente.GetPosicao(X + 1, Y); }
     }
 }

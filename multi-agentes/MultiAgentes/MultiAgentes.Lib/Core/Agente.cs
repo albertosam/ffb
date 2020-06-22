@@ -4,18 +4,20 @@ using System.Text;
 
 namespace MultiAgentes.Lib.Core
 {
-    public abstract class Agente_
+    public abstract class Agente
     {
-        private Ambiente_ ambiente;
-        public Posicao_ Atual { get; set; } = new Posicao_();
+        private readonly Ambiente ambiente;
+        public Posicao Atual { get; set; } = new Posicao();
         public int Movimentacoes { get; set; }
         public int Limpezas { get; set; }
-        public Agente_(Ambiente_ ambiente)
+        public string Nome { get; set; }
+        public abstract Direcao GetDirecao();
+        public Agente(Ambiente ambiente)
         {
             this.ambiente = ambiente;
         }
 
-        public Posicao_ Mover()
+        public Posicao Mover()
         {
             var mov = GetDirecao();
 
@@ -53,10 +55,6 @@ namespace MultiAgentes.Lib.Core
             this.Atual.Limpezas++;
             this.Limpezas++;
         }
-
-        public string Nome { get; set; }
-
-        public abstract Direcao GetDirecao();
 
         private void Subir()
         {

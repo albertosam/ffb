@@ -4,9 +4,9 @@ using System.Text;
 
 namespace MultiAgentes.Lib.Core
 {
-    public class AgenteAleatorio : Agente_
+    public class AgenteAleatorio : Agente
     {
-        public AgenteAleatorio(Ambiente_ ambiente) : base(ambiente)
+        public AgenteAleatorio(Ambiente ambiente) : base(ambiente)
         {
         }
 

@@ -8,7 +8,7 @@ namespace MultiAgentes.Lib
 {
     public static class Util
     {
-        public static Posicionamento Parse(this Posicao_ posicao) => new Posicionamento(posicao.X, posicao.Y, posicao.Limpo);
+        public static Posicionamento Parse(this Posicao posicao) => new Posicionamento(posicao.X, posicao.Y, posicao.Limpo);
         public static int GetNumero(int max)
         {
             var random = new Random();

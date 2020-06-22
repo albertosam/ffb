@@ -7,15 +7,15 @@ namespace MultiAgentes.Lib.Core
 {
     public class Perceptor
     {
-        private List<Posicao_> posicoesSujas = new List<Posicao_>();
+        private List<Posicao> posicoesSujas = new List<Posicao>();
 
-        public void RemoveSujo(Posicao_ posicao)
+        public void RemoveSujo(Posicao posicao)
         {
             var pos = posicoesSujas.SingleOrDefault(a => a.Chave == posicao.Chave);
             posicoesSujas.Remove(pos);
         }
 
-        public void AddSujo(Posicao_ posicao)
+        public void AddSujo(Posicao posicao)
         {
             if (!posicoesSujas.Any(a => a.Chave == posicao.Chave))
                 posicoesSujas.Add(posicao);
@@ -26,7 +26,7 @@ namespace MultiAgentes.Lib.Core
             return posicoesSujas.Count == 0;
         }
 
-        public Posicao_ Proxima()
+        public Posicao Proxima()
         {
             return posicoesSujas.FirstOrDefault();
         }

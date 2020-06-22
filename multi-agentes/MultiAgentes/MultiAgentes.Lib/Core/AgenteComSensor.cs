@@ -5,9 +5,9 @@ using System.Text;
 
 namespace MultiAgentes.Lib.Core
 {
-    public class AgenteComSensor : Agente_
+    public class AgenteComSensor : Agente
     {
-        public AgenteComSensor(Ambiente_ ambiente) : base(ambiente)
+        public AgenteComSensor(Ambiente ambiente) : base(ambiente)
         {
         }
 
@@ -31,6 +31,6 @@ namespace MultiAgentes.Lib.Core
             return Util.MovimentoAleatorio();
         }
 
-        private Direcao VerificarSituacao(Posicao_ posicao, Direcao movimento) => posicao != null && !posicao.Limpo ? movimento : Direcao.PARADO;
+        private Direcao VerificarSituacao(Posicao posicao, Direcao movimento) => posicao != null && !posicao.Limpo ? movimento : Direcao.PARADO;
     }
 }

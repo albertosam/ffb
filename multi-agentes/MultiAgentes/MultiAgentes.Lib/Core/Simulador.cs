@@ -9,8 +9,8 @@ namespace MultiAgentes.Lib.Core
     {
         private Logger _logger = new Logger();
 
-        public Ambiente_ Ambiente { get; set; }
-        public Agente_ Agente { get; set; }
+        public Ambiente Ambiente { get; set; }
+        public Agente Agente { get; set; }
         public Perceptor Perceptor { get; set; }
         public List<AgenteBenchmark> Benchmarks { get; set; } = new List<AgenteBenchmark>();
 
@@ -19,19 +19,19 @@ namespace MultiAgentes.Lib.Core
             _logger.Novo("Simulação");
             _logger.Log($"Inicializado simulação. Dimensão: {dimensao}");
 
-            Ambiente = Ambiente_.Criar(dimensao);
-            Ambiente_.SujarAletorio(Ambiente, 1);
+            Ambiente = Ambiente.Criar(dimensao);
+            Ambiente.SujarAletorio(Ambiente, 1);
             Perceptor = Ambiente.GetAgentePerceptor();
         }
 
         public void InicializarAmbienteControlado()
         {
-            var dimensao = 3;
+            var dimensao = 5;
 
             _logger.Novo("Simulação Com Ambiente Controlado");
             _logger.Log($"Dimensão: {dimensao}");
 
-            Ambiente = Ambiente_.Criar(dimensao);
+            Ambiente = Ambiente.Criar(dimensao);
             Ambiente.Sujar(3, 2);
             Ambiente.Sujar(1, 4);
             Ambiente.Sujar(4, 4);
@@ -39,7 +39,7 @@ namespace MultiAgentes.Lib.Core
             Perceptor = Ambiente.GetAgentePerceptor();
         }
 
-        public Posicao_ RegistrarAgente(string nome)
+        public Posicao RegistrarAgente(string nome)
         {
             Agente = nome == "A" ? AgenteAleatorio() : AgenteComSensor();
 
@@ -54,14 +54,14 @@ namespace MultiAgentes.Lib.Core
             return posicao;
         }
 
-        public Posicao_ Mover(Direcao direcao)
+        public Posicao Mover(Direcao direcao)
         {
             var posicao = Ambiente.Movimentar(direcao);
             _logger.Log($"Posição atual [{posicao.X},{posicao.Y}]");
             return posicao;
         }
 
-        public Posicao_ ProximaPosicao()
+        public Posicao ProximaPosicao()
         {
             if (Perceptor.TudoLimpo())
             {
@@ -85,7 +85,7 @@ namespace MultiAgentes.Lib.Core
             });
         }
 
-        public Posicao_ PosicaoAtuador()
+        public Posicao PosicaoAtuador()
         {
             return Ambiente.Atuador;
         }
@@ -107,12 +107,12 @@ namespace MultiAgentes.Lib.Core
             return mensgens;
         }
 
-        public Agente_ AgenteAleatorio()
+        public Agente AgenteAleatorio()
         {
             return new AgenteAleatorio(this.Ambiente) { Nome = "Agente Aleatório" };
         }
 
-        public Agente_ AgenteComSensor()
+        public Agente AgenteComSensor()
         {
             return new AgenteComSensor(this.Ambiente) { Nome = "Agente Com Sensor" };
         }
