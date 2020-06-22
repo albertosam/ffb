@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using MultiAgentes.Lib.Core;
-using MultiAgentes.Lib.Enumeradores;
 using MultiAgentes.Lib.Services;
 using System;
 using System.Collections.Generic;

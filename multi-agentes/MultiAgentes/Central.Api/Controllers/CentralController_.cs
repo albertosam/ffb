@@ -20,10 +20,8 @@ namespace Central.Api.Controllers
         private readonly ILogger<CentralController> _logger;
 
         public Simulador Simulador { get; }
-        public ICentralMemoria CentralMemoria { get; }
 
-        public CentralController(ILogger<CentralController> logger, Simulador simulador,
-            ICentralMemoria centralMemoria)
+        public CentralController(ILogger<CentralController> logger, Simulador simulador)
         {
             _logger = logger;
             Simulador = simulador;
