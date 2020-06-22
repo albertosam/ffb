@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\CentralController.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\MultiAgentes.Lib\MultiAgentes.Lib.csproj" />
   </ItemGroup>
 

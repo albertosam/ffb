@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using MultiAgentes.Lib;
+using MultiAgentes.Lib.Core;
 
 namespace Central.Api
 {
@@ -29,6 +30,7 @@ namespace Central.Api
         {
             services.AddControllers();
             services.AddSingleton<Simulacao>();
+            services.AddSingleton<Simulador>();
             services.AddSingleton<ICentralMemoria, CentralMemoria>();
             services.AddHostedService<WorkService>();
         }

@@ -1,10 +1,11 @@
-﻿using MultiAgentes.Lib;
+﻿using MultiAgentes.Lib.Core;
 using MultiAgentes.Lib.Enumeradores;
 using MultiAgentes.Lib.Services;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Direcao = MultiAgentes.Lib.Core.Direcao;
 
 namespace AspiradorConsole
 {
@@ -12,7 +13,7 @@ namespace AspiradorConsole
     {
         private readonly ICentralClient centralClient;
         private readonly IConsolePrinter consolePrinter;
-        Posicao posicao;
+        Posicao_ posicao;
         public bool AmbienteLimpo { get; set; } = false;
 
         public Controladora(ICentralClient centralClient, IConsolePrinter consolePrinter)
@@ -21,42 +22,34 @@ namespace AspiradorConsole
             this.consolePrinter = consolePrinter;
         }
 
-        public async Task Registrar()
+        public void Registrar()
         {
-            var requestRegistrar = this.centralClient.Registrar("aspirador-5000");
-            requestRegistrar.Wait();
-
-            this.posicao = await requestRegistrar;
+            this.posicao = this.centralClient.Registrar("aspirador-5000");
         }
 
-        public async Task MovimentarELimpar()
+        public void MovimentarELimpar()
         {
-            var proximaPosicaoRequest = this.centralClient.ProximaPosicao();
-            proximaPosicaoRequest.Wait();
-
-            var proximaPosicao = await proximaPosicaoRequest;
+            var proximaPosicao = this.centralClient.ProximaPosicao();
             if (proximaPosicao == null)
             {
                 this.AmbienteLimpo = true;
                 this.consolePrinter.AmbienteLimpo();
                 return;
             }
-            
+
             while (proximaPosicao.Chave != posicao.Chave)
             {
                 var direcao = Movimentar(proximaPosicao, posicao);
-                var resquestMovimento = this.centralClient.Movimentar((int)direcao);
-                resquestMovimento.Wait();
+                this.posicao = this.centralClient.Movimentar((int)direcao);
 
-                posicao = await resquestMovimento;
                 this.consolePrinter.PosicaoAtual(posicao.X, posicao.Y);
             }
 
-            this.centralClient.LimpezaRealizada(posicao).Wait();
+            this.centralClient.LimpezaRealizada(posicao);
             this.consolePrinter.Aspirado(posicao.X, posicao.Y);
         }
 
-        private Direcao Movimentar(Posicao desejada, Posicao atual)
+        private Direcao Movimentar(Posicao_ desejada, Posicao_ atual)
         {
             var difX = atual.X - desejada.X;
             var difY = atual.Y - desejada.Y;

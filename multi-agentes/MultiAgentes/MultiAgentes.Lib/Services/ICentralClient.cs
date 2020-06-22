@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualBasic;
+using MultiAgentes.Lib.Core;
 using MultiAgentes.Lib.Requests;
 using Newtonsoft.Json;
 using System;
@@ -11,11 +12,11 @@ namespace MultiAgentes.Lib.Services
 {
     public interface ICentralClient
     {
-        Task<Posicao> GetPosicaoAtual();
-        Task LimpezaRealizada(Posicao posicao);
-        Task<Posicao> ProximaPosicao();
-        Task<Posicao> Movimentar(int direcao);
-        Task<Posicao> Registrar(string nome);
+        Posicao_ GetPosicaoAtual();
+        void LimpezaRealizada(Posicao_ posicao);
+        Posicao_ ProximaPosicao();
+        Posicao_ Movimentar(int direcao);
+        Posicao_ Registrar(string nome);
     }
 
 
@@ -29,35 +30,53 @@ namespace MultiAgentes.Lib.Services
             this.httpClient.BaseAddress = new Uri("https://localhost:5001/");
         }
 
-        public async Task<Posicao> GetPosicaoAtual()
+        public Posicao_ GetPosicaoAtual()
         {
-            var result = await this.httpClient.GetAsync("central/posicao");
-            var posicao = result.Read<Posicao>();
+            var result = this.httpClient.GetAsync("central/posicao");
+            var httpResponse = result.GetAwaiter().GetResult();
+
+            var posicao = httpResponse.Read<Posicao_>();
             return posicao;
         }
 
-        public async Task LimpezaRealizada(Posicao posicao)
+        public void LimpezaRealizada(Posicao_ posicao)
         {
-            await this.httpClient.PostAsync("central/limpar", new JsonContent(posicao));
+            this.httpClient.PostAsync("central/limpar", new JsonContent(posicao)).Wait();
         }
 
-        public async Task<Posicao> Registrar(string nome)
+        public Posicao_ Registrar(string nome)
         {
-            var result = await this.httpClient.PostAsync("central/registrar", new JsonContent(nome));
-            var posicao = result.Read<Posicao>();
+            var result = this.httpClient.PostAsync("central/registrar", new JsonContent(nome));
+            var httpResponse = result.GetAwaiter().GetResult();
+
+            var posicao = httpResponse.Read<Posicao_>();
             return posicao;
         }
 
-        public async Task<Posicao> Movimentar(int direcao)
+        public Posicao_ Movimentar(int direcao)
         {
-            var result = await this.httpClient.PostAsync("central/movimentar", new JsonContent(direcao));
-            var posicao = result.Read<Posicao>();
+            var result = this.httpClient.PostAsync("central/movimentar", new JsonContent(direcao));
+            var httpResponse = result.GetAwaiter().GetResult();
+
+            var posicao = httpResponse.Read<Posicao_>();
             return posicao;
         }
-        public async Task<Posicao> ProximaPosicao()
+
+        public Posicao_ GetPosicao()
         {
-            var result = await this.httpClient.GetAsync("central/proximaPosicao");
-            var posicao = result.Read<Posicao>();
+            var result = this.httpClient.GetAsync("central/posicao");
+            var httpResponse = result.GetAwaiter().GetResult();
+
+            var posicao = httpResponse.Read<Posicao_>();
+            return posicao;
+        }
+
+        public Posicao_ ProximaPosicao()
+        {
+            var result = this.httpClient.GetAsync("central/proximaPosicao");
+            var httpResponse = result.GetAwaiter().GetResult();
+
+            var posicao = httpResponse.Read<Posicao_>();
             return posicao;
         }
     }

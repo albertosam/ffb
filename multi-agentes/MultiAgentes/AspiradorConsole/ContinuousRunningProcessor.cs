@@ -35,11 +35,11 @@ namespace AspiradorConsole
             {
                 logger.LogInformation("Process started!");
 
-                controladora.Registrar().Wait();
+                controladora.Registrar();
 
                 while (!controladora.AmbienteLimpo)
                 {
-                    controladora.MovimentarELimpar().Wait();
+                    controladora.MovimentarELimpar();
 
                     consolePrinter.Print(++count);
                     System.Threading.Thread.Sleep(1000);
