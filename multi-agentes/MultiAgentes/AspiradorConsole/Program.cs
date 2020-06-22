@@ -8,10 +8,10 @@ namespace AspiradorConsole
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello Docker World!");
+            Console.WriteLine("Aspirador ligado!");
 
             var serviceProvider = ContainerConfiguration.Configure();
-            serviceProvider.GetService<ContinuousRunningProcessor>().Process();
+            serviceProvider.GetService<ContinuousRunningProcessor>().Process(args[0]);
         }
 
     }

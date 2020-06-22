@@ -18,12 +18,19 @@ namespace MultiAgentes.Lib.Core
 
         public static Ambiente_ Criar(int dimensao)
         {
+            bool bordaCima, bordaEsquerda, bordaDireita, bordaBaixo = false;
+
             var ambiente = new Ambiente_(dimensao);
             for (int i = 0; i < dimensao; i++)
             {
                 for (int j = 0; j < dimensao; j++)
                 {
-                    ambiente.Posicoes[i, j] = new Posicao_(i, j, true);
+                    bordaCima = i == 0;
+                    bordaEsquerda = j == 0;
+                    bordaDireita = j == dimensao - 1;
+                    bordaBaixo = i == dimensao - 1;
+
+                    ambiente.Posicoes[i, j] = new Posicao_(ambiente, i, j, bordaCima, bordaEsquerda, bordaDireita, bordaBaixo);
                 }
             }
 
@@ -53,6 +60,16 @@ namespace MultiAgentes.Lib.Core
             }
         }
 
+        public Posicao_ GetPosicao(int x, int y)
+        {
+            if (x >= 0 && y >= 0)
+                if (x < Dimensao && y < Dimensao)
+                    return Posicoes[x, y];
+
+            return null;
+        }
+
+
         public void Sujar(int x, int y)
         {
             this.Posicoes[x, y].Limpo = false;
@@ -60,7 +77,7 @@ namespace MultiAgentes.Lib.Core
 
         public void Limpar(int x, int y)
         {
-            this.Posicoes[x, y].Limpo = true;            
+            this.Posicoes[x, y].Limpo = true;
         }
 
         public Perceptor GetAgentePerceptor()

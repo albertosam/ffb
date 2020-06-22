@@ -1,4 +1,5 @@
-﻿using MultiAgentes.Lib.Core;
+﻿using Microsoft.Extensions.DependencyInjection;
+using MultiAgentes.Lib.Core;
 using MultiAgentes.Lib.Enumeradores;
 using MultiAgentes.Lib.Services;
 using System;
@@ -13,7 +14,7 @@ namespace AspiradorConsole
     {
         private readonly ICentralClient centralClient;
         private readonly IConsolePrinter consolePrinter;
-        Posicao_ posicao;
+        Posicionamento posicao;
         public bool AmbienteLimpo { get; set; } = false;
 
         public Controladora(ICentralClient centralClient, IConsolePrinter consolePrinter)
@@ -22,13 +23,21 @@ namespace AspiradorConsole
             this.consolePrinter = consolePrinter;
         }
 
-        public void Registrar()
+        public void Registrar(string modelo)
         {
-            this.posicao = this.centralClient.Registrar("aspirador-5000");
+            this.posicao = this.centralClient.Registrar(modelo);
         }
 
         public void MovimentarELimpar()
         {
+            // realiza limpeza
+            if (posicao.Limpo == false)
+            {
+                this.centralClient.LimpezaRealizada(posicao);
+                this.consolePrinter.Aspirado(posicao.X, posicao.Y);
+            }
+
+            // seleciona posição
             var proximaPosicao = this.centralClient.ProximaPosicao();
             if (proximaPosicao == null)
             {
@@ -37,6 +46,7 @@ namespace AspiradorConsole
                 return;
             }
 
+            // movimenta para posição selecionada
             while (proximaPosicao.Chave != posicao.Chave)
             {
                 var direcao = Movimentar(proximaPosicao, posicao);
@@ -44,12 +54,9 @@ namespace AspiradorConsole
 
                 this.consolePrinter.PosicaoAtual(posicao.X, posicao.Y);
             }
-
-            this.centralClient.LimpezaRealizada(posicao);
-            this.consolePrinter.Aspirado(posicao.X, posicao.Y);
         }
 
-        private Direcao Movimentar(Posicao_ desejada, Posicao_ atual)
+        private Direcao Movimentar(Posicionamento desejada, Posicionamento atual)
         {
             var difX = atual.X - desejada.X;
             var difY = atual.Y - desejada.Y;

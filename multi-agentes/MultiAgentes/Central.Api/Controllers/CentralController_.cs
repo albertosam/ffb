@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MultiAgentes.Lib;
 using MultiAgentes.Lib.Core;
+using MultiAgentes.Lib.Services;
 
 namespace Central.Api.Controllers
 {
@@ -36,9 +37,10 @@ namespace Central.Api.Controllers
         /// <param name="s"></param>
         /// <returns></returns>
         [HttpGet("iniciar")]
-        public IActionResult PostIniciar([FromQuery] int d, [FromQuery] int s)
+        public IActionResult PostIniciar()
         {
-            Simulador.Inicializar(10);
+            //Simulador.Inicializar(5);
+            Simulador.InicializarAmbienteControlado();
             return Ok();
         }
 
@@ -48,38 +50,38 @@ namespace Central.Api.Controllers
         /// <param name="nome"></param>
         /// <returns></returns>
         [HttpPost("registrar")]
-        public Task<Posicao_> PostRegistrar([FromBody] string nome)
+        public Task<Posicionamento> PostRegistrar([FromBody] string nome)
         {
             var posicao = Simulador.RegistrarAgente(nome);
-            return Task.FromResult(posicao);
+            return Task.FromResult(posicao.Parse());
         }
 
         [HttpGet("posicao")]
-        public Task<Posicao_> Posicao()
+        public Task<Posicionamento> Posicao()
         {
             var posicao = Simulador.PosicaoAtuador();
-            return Task.FromResult(posicao);
+            return Task.FromResult(posicao.Parse());
         }
 
 
         [HttpGet("proximaPosicao")]
-        public Task<Posicao_> ProximaPosicao()
+        public Task<Posicionamento> ProximaPosicao()
         {
             var posicao = Simulador.ProximaPosicao();
-            return Task.FromResult(posicao);
+            return Task.FromResult(posicao?.Parse());
         }
 
         [HttpPost("movimentar")]
-        public Task<Posicao_> Movimentar([FromBody]int direcao)
+        public Task<Posicionamento> Movimentar([FromBody]int direcao)
         {
             var posicao = Simulador.Mover((Direcao)direcao);
-            return Task.FromResult(posicao);
+            return Task.FromResult(posicao.Parse());
         }
 
         [HttpPost("limpar")]
-        public void Limpar([FromBody] Posicao_ posicao)
+        public void Limpar([FromBody] Posicionamento posicao)
         {
-            Simulador.Limpar(posicao);
+            Simulador.Limpar(posicao.X, posicao.Y);
         }
 
         [HttpGet("log")]
@@ -87,5 +89,13 @@ namespace Central.Api.Controllers
         {
             return Simulador.GetLogs();
         }
+
+        [HttpGet("stats")]
+        public List<AgenteBenchmark> Stats()
+        {
+            return Simulador.Benchmarks;
+        }
+
     }
+
 }

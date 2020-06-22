@@ -27,7 +27,7 @@ namespace AspiradorConsole
             this.controladora = controladora;
         }
 
-        public void Process()
+        public void Process(string modelo)
         {
             var count = 0;
 
@@ -35,14 +35,13 @@ namespace AspiradorConsole
             {
                 logger.LogInformation("Process started!");
 
-                controladora.Registrar();
+                controladora.Registrar(modelo);
 
                 while (!controladora.AmbienteLimpo)
                 {
                     controladora.MovimentarELimpar();
 
                     consolePrinter.Print(++count);
-                    System.Threading.Thread.Sleep(1000);
                 }
             });
 

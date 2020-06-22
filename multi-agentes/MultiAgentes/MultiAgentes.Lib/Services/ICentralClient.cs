@@ -12,11 +12,11 @@ namespace MultiAgentes.Lib.Services
 {
     public interface ICentralClient
     {
-        Posicao_ GetPosicaoAtual();
-        void LimpezaRealizada(Posicao_ posicao);
-        Posicao_ ProximaPosicao();
-        Posicao_ Movimentar(int direcao);
-        Posicao_ Registrar(string nome);
+        Posicionamento GetPosicaoAtual();
+        void LimpezaRealizada(Posicionamento posicao);
+        Posicionamento ProximaPosicao();
+        Posicionamento Movimentar(int direcao);
+        Posicionamento Registrar(string nome);
     }
 
 
@@ -30,53 +30,53 @@ namespace MultiAgentes.Lib.Services
             this.httpClient.BaseAddress = new Uri("https://localhost:5001/");
         }
 
-        public Posicao_ GetPosicaoAtual()
+        public Posicionamento GetPosicaoAtual()
         {
             var result = this.httpClient.GetAsync("central/posicao");
             var httpResponse = result.GetAwaiter().GetResult();
 
-            var posicao = httpResponse.Read<Posicao_>();
+            var posicao = httpResponse.Read<Posicionamento>();
             return posicao;
         }
 
-        public void LimpezaRealizada(Posicao_ posicao)
+        public void LimpezaRealizada(Posicionamento posicao)
         {
             this.httpClient.PostAsync("central/limpar", new JsonContent(posicao)).Wait();
         }
 
-        public Posicao_ Registrar(string nome)
+        public Posicionamento Registrar(string nome)
         {
             var result = this.httpClient.PostAsync("central/registrar", new JsonContent(nome));
             var httpResponse = result.GetAwaiter().GetResult();
 
-            var posicao = httpResponse.Read<Posicao_>();
+            var posicao = httpResponse.Read<Posicionamento>();
             return posicao;
         }
 
-        public Posicao_ Movimentar(int direcao)
+        public Posicionamento Movimentar(int direcao)
         {
             var result = this.httpClient.PostAsync("central/movimentar", new JsonContent(direcao));
             var httpResponse = result.GetAwaiter().GetResult();
 
-            var posicao = httpResponse.Read<Posicao_>();
+            var posicao = httpResponse.Read<Posicionamento>();
             return posicao;
         }
 
-        public Posicao_ GetPosicao()
+        public Posicionamento GetPosicao()
         {
             var result = this.httpClient.GetAsync("central/posicao");
             var httpResponse = result.GetAwaiter().GetResult();
 
-            var posicao = httpResponse.Read<Posicao_>();
+            var posicao = httpResponse.Read<Posicionamento>();
             return posicao;
         }
 
-        public Posicao_ ProximaPosicao()
+        public Posicionamento ProximaPosicao()
         {
             var result = this.httpClient.GetAsync("central/proximaPosicao");
             var httpResponse = result.GetAwaiter().GetResult();
 
-            var posicao = httpResponse.Read<Posicao_>();
+            var posicao = httpResponse.Read<Posicionamento>();
             return posicao;
         }
     }
