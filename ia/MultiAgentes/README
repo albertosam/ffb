@@ -1,0 +1,8 @@
+# MultiAgentes
+
+Projeto desenvolvido em C# / .Net Core 3.0
+
+Solução composta por:
+- AspiradorConsole: aplicação console simula equipamento
+- Central.Api: aplicação REST provedora de informações para AspiradorConsole
+- MultiAgentes.Lib: biblioteca de compartilhamento de código e definição de API implementada pela Central.Api
