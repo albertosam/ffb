@@ -31,7 +31,9 @@
             };
 
             var naoParado = direcoes.Where(a => a != Direcao.PARADO).ToList();
-            if (naoParado.Count >= 1)
+            if (naoParado.Count == 1)
+                return naoParado.First();
+            else if (naoParado.Count >= 1)
             {
                 var index = Util.GetNumero(naoParado.Count);
                 return naoParado[index];

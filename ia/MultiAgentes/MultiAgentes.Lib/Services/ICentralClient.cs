@@ -114,19 +114,6 @@
         }
 
         /// <summary>
-        /// The GetPosicao.
-        /// </summary>
-        /// <returns>The <see cref="Posicionamento"/>.</returns>
-        public Posicionamento GetPosicao()
-        {
-            var result = this.httpClient.GetAsync("central/posicao");
-            var httpResponse = result.GetAwaiter().GetResult();
-
-            var posicao = httpResponse.Read<Posicionamento>();
-            return posicao;
-        }
-
-        /// <summary>
         /// The ProximaPosicao.
         /// </summary>
         /// <returns>The <see cref="Posicionamento"/>.</returns>

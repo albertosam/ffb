@@ -74,6 +74,7 @@
             // realiza limpeza
             if (posicao.Limpo == false)
             {
+                posicao.Limpo = true;
                 this.centralClient.LimpezaRealizada(posicao);
                 this.consolePrinter.Aspirado(posicao.X, posicao.Y);
             }
