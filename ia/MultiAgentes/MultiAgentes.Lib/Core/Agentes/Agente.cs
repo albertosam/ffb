@@ -1,6 +1,7 @@
 ﻿namespace MultiAgentes.Lib.Core
 {
     using System.Collections.Generic;
+    using System.Linq;
 
     /// <summary>
     /// Defines the <see cref="Agente" />.
@@ -96,7 +97,7 @@
                     break;
             }
 
-            this.Movimentos.Add(new Movimento { Direcao = mov, X = this.Atual.X, Y = this.Atual.Y });
+            this.Movimentos.Add(new Movimento { Direcao = mov, X = this.Atual.X, Y = this.Atual.Y, Limpo = this.Atual.Limpo  });
 
             return this.Atual;
         }
@@ -107,8 +108,7 @@
         public void Limpar()
         {
             this.Atual.Limpo = true;
-            this.Atual.Limpezas++;
-            this.Limpezas++;
+            this.Limpezas++;            
         }
 
         /// <summary>
@@ -166,6 +166,11 @@
             /// Gets or sets the Direcao.
             /// </summary>
             public Direcao Direcao { get; set; }
+
+            /// <summary>
+            /// Gets or sets the Limpo.
+            /// </summary>
+            public bool Limpo { get; set; }
         }
     }
 }

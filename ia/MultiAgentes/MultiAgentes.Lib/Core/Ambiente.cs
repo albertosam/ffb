@@ -67,7 +67,7 @@
         public Posicao SetPosicaoAgente(int x, int y)
         {
             var posicao = this.Posicoes[x, y];
-            this.Atuador = posicao;
+            this.Atuador = posicao;            
             return posicao;
         }
 

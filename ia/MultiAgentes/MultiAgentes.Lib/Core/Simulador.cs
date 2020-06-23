@@ -140,7 +140,7 @@
                 Nome = Agente.Nome,
                 Limpezas = Agente.Limpezas,
                 Movimentos = Agente.Movimentacoes,
-                Historico = Agente.Movimentos.Select(a => $" {a.Direcao} -> [{a.X}, {a.Y}] ").ToList()
+                Historico = Agente.Movimentos.Select(a => $" {a.Direcao} -> [{a.X}, {a.Y}] {(a.Limpo ? "[]" : "[Sujo]")} ").ToList()
             });
         }
 
