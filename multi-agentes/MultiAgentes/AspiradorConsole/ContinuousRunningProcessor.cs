@@ -1,22 +1,39 @@
-﻿using Microsoft.Extensions.Logging;
-using MultiAgentes.Lib;
-using MultiAgentes.Lib.Services;
-using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Reflection.Metadata.Ecma335;
-
-namespace AspiradorConsole
+﻿namespace AspiradorConsole
 {
+    using Microsoft.Extensions.Logging;
+    using System;
+
+    /// <summary>
+    /// Defines the <see cref="ContinuousRunningProcessor" />.
+    /// </summary>
     internal class ContinuousRunningProcessor
     {
+        /// <summary>
+        /// Defines the _closingEvent.
+        /// </summary>
         private static readonly System.Threading.AutoResetEvent _closingEvent = new System.Threading.AutoResetEvent(false);
+
+        /// <summary>
+        /// Defines the consolePrinter.
+        /// </summary>
         private readonly IConsolePrinter consolePrinter;
+
+        /// <summary>
+        /// Defines the logger.
+        /// </summary>
         private readonly Microsoft.Extensions.Logging.ILogger<ContinuousRunningProcessor> logger;
+
+        /// <summary>
+        /// Defines the controladora.
+        /// </summary>
         private readonly Controlador controladora;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ContinuousRunningProcessor"/> class.
+        /// </summary>
+        /// <param name="consolePrinter">The consolePrinter<see cref="IConsolePrinter"/>.</param>
+        /// <param name="logger">The logger<see cref="Microsoft.Extensions.Logging.ILogger{ContinuousRunningProcessor}"/>.</param>
+        /// <param name="controladora">The controladora<see cref="Controlador"/>.</param>
         public ContinuousRunningProcessor(IConsolePrinter consolePrinter,
                 Microsoft.Extensions.Logging.ILogger<ContinuousRunningProcessor> logger,
                 Controlador controladora)
@@ -26,6 +43,10 @@ namespace AspiradorConsole
             this.controladora = controladora;
         }
 
+        /// <summary>
+        /// The Process.
+        /// </summary>
+        /// <param name="modelo">The modelo<see cref="string"/>.</param>
         public void Process(string modelo)
         {
             var count = 0;
@@ -38,7 +59,7 @@ namespace AspiradorConsole
 
                 while (!controladora.AmbienteLimpo)
                 {
-                    controladora.MovimentarELimpar();                    
+                    controladora.MovimentarELimpar();
                 }
             });
 
@@ -51,7 +72,5 @@ namespace AspiradorConsole
 
             _closingEvent.WaitOne();
         }
-
-        
     }
 }

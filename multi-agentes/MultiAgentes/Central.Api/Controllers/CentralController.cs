@@ -1,26 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Mail;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using MultiAgentes.Lib;
-using MultiAgentes.Lib.Core;
-using MultiAgentes.Lib.Services;
-
-namespace Central.Api.Controllers
+﻿namespace Central.Api.Controllers
 {
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Logging;
+    using MultiAgentes.Lib;
+    using MultiAgentes.Lib.Core;
+    using MultiAgentes.Lib.Services;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+
+    /// <summary>
+    /// Defines the <see cref="CentralController" />.
+    /// </summary>
     [ApiController]
     [Route("[controller]")]
     public class CentralController : ControllerBase
     {
-
+        /// <summary>
+        /// Defines the _logger.
+        /// </summary>
         private readonly ILogger<CentralController> _logger;
 
+        /// <summary>
+        /// Gets the Simulador.
+        /// </summary>
         public Simulador Simulador { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CentralController"/> class.
+        /// </summary>
+        /// <param name="logger">The logger<see cref="ILogger{CentralController}"/>.</param>
+        /// <param name="simulador">The simulador<see cref="Simulador"/>.</param>
         public CentralController(ILogger<CentralController> logger, Simulador simulador)
         {
             _logger = logger;
@@ -31,8 +40,8 @@ namespace Central.Api.Controllers
         /// Registra o aspirador a central de comando.
         /// Informações de ambiente são carregadas e realizada marcações sobe posições sujas.
         /// </summary>
-        /// <param name="nome"></param>
-        /// <returns></returns>
+        /// <param name="nome">.</param>
+        /// <returns>.</returns>
         [HttpPost("registrar")]
         public Task<Posicionamento> PostRegistrar([FromBody] string nome)
         {
@@ -45,9 +54,9 @@ namespace Central.Api.Controllers
         }
 
         /// <summary>
-        /// Posição atual do aspirador
+        /// Posição atual do aspirador.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>.</returns>
         [HttpGet("posicao")]
         public Task<Posicionamento> Posicao()
         {
@@ -56,9 +65,9 @@ namespace Central.Api.Controllers
         }
 
         /// <summary>
-        /// Obtém proxima posição a ser assumida
+        /// Obtém proxima posição a ser assumida.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>.</returns>
         [HttpGet("proximaPosicao")]
         public Task<Posicionamento> ProximaPosicao()
         {
@@ -67,10 +76,10 @@ namespace Central.Api.Controllers
         }
 
         /// <summary>
-        /// Realiza movimento
+        /// Realiza movimento.
         /// </summary>
-        /// <param name="direcao"></param>
-        /// <returns></returns>
+        /// <param name="direcao">.</param>
+        /// <returns>.</returns>
         [HttpPost("movimentar")]
         public Task<Posicionamento> Movimentar([FromBody] int direcao)
         {
@@ -78,11 +87,10 @@ namespace Central.Api.Controllers
             return Task.FromResult(posicao.Parse());
         }
 
-
         /// <summary>
-        /// Informa limpeza de posição
+        /// Informa limpeza de posição.
         /// </summary>
-        /// <param name="posicao"></param>
+        /// <param name="posicao">.</param>
         [HttpPost("limpar")]
         public void Limpar([FromBody] Posicionamento posicao)
         {
@@ -90,9 +98,9 @@ namespace Central.Api.Controllers
         }
 
         /// <summary>
-        /// Logs registrados
+        /// Logs registrados.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>.</returns>
         [HttpGet("log")]
         public List<string> Log()
         {
@@ -100,15 +108,13 @@ namespace Central.Api.Controllers
         }
 
         /// <summary>
-        /// Informações sobre perfomance registradas nas simulações
+        /// Informações sobre perfomance registradas nas simulações.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>.</returns>
         [HttpGet("stats")]
         public List<AgenteStats> Stats()
         {
             return Simulador.Benchmarks;
         }
-
     }
-
 }

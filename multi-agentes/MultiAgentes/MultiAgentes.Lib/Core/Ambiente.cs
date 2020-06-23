@@ -1,21 +1,42 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace MultiAgentes.Lib.Core
+﻿namespace MultiAgentes.Lib.Core
 {
+    using System;
+
+    /// <summary>
+    /// Defines the <see cref="Ambiente" />.
+    /// </summary>
     public class Ambiente
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Ambiente"/> class.
+        /// </summary>
+        /// <param name="dimensao">The dimensao<see cref="int"/>.</param>
         public Ambiente(int dimensao)
         {
             Dimensao = dimensao;
             Posicoes = new Posicao[dimensao, dimensao];
         }
 
+        /// <summary>
+        /// Gets or sets the Posicoes.
+        /// </summary>
         public Posicao[,] Posicoes { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Atuador.
+        /// </summary>
         public Posicao Atuador { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Dimensao.
+        /// </summary>
         public int Dimensao { get; set; }
 
+        /// <summary>
+        /// The Criar.
+        /// </summary>
+        /// <param name="dimensao">The dimensao<see cref="int"/>.</param>
+        /// <returns>The <see cref="Ambiente"/>.</returns>
         public static Ambiente Criar(int dimensao)
         {
             bool bordaCima, bordaEsquerda, bordaDireita, bordaBaixo = false;
@@ -37,6 +58,12 @@ namespace MultiAgentes.Lib.Core
             return ambiente;
         }
 
+        /// <summary>
+        /// The SetPosicaoAgente.
+        /// </summary>
+        /// <param name="x">The x<see cref="int"/>.</param>
+        /// <param name="y">The y<see cref="int"/>.</param>
+        /// <returns>The <see cref="Posicao"/>.</returns>
         public Posicao SetPosicaoAgente(int x, int y)
         {
             var posicao = this.Posicoes[x, y];
@@ -44,6 +71,11 @@ namespace MultiAgentes.Lib.Core
             return posicao;
         }
 
+        /// <summary>
+        /// The SujarAletorio.
+        /// </summary>
+        /// <param name="ambiente">The ambiente<see cref="Ambiente"/>.</param>
+        /// <param name="qtdePosicoes">The qtdePosicoes<see cref="int"/>.</param>
         public static void SujarAletorio(Ambiente ambiente, int qtdePosicoes)
         {
             var random = new Random();
@@ -60,6 +92,12 @@ namespace MultiAgentes.Lib.Core
             }
         }
 
+        /// <summary>
+        /// The GetPosicao.
+        /// </summary>
+        /// <param name="x">The x<see cref="int"/>.</param>
+        /// <param name="y">The y<see cref="int"/>.</param>
+        /// <returns>The <see cref="Posicao"/>.</returns>
         public Posicao GetPosicao(int x, int y)
         {
             if (x >= 0 && y >= 0)
@@ -69,16 +107,30 @@ namespace MultiAgentes.Lib.Core
             return null;
         }
 
+        /// <summary>
+        /// The Sujar.
+        /// </summary>
+        /// <param name="x">The x<see cref="int"/>.</param>
+        /// <param name="y">The y<see cref="int"/>.</param>
         public void Sujar(int x, int y)
         {
             this.Posicoes[x, y].Limpo = false;
         }
 
+        /// <summary>
+        /// The Limpar.
+        /// </summary>
+        /// <param name="x">The x<see cref="int"/>.</param>
+        /// <param name="y">The y<see cref="int"/>.</param>
         public void Limpar(int x, int y)
         {
             this.Posicoes[x, y].Limpo = true;
         }
 
+        /// <summary>
+        /// The GetAgentePerceptor.
+        /// </summary>
+        /// <returns>The <see cref="Perceptor"/>.</returns>
         public Perceptor GetAgentePerceptor()
         {
             Perceptor p = new Perceptor();
@@ -94,6 +146,11 @@ namespace MultiAgentes.Lib.Core
             return p;
         }
 
+        /// <summary>
+        /// The Movimentar.
+        /// </summary>
+        /// <param name="direcao">The direcao<see cref="Direcao"/>.</param>
+        /// <returns>The <see cref="Posicao"/>.</returns>
         public Posicao Movimentar(Direcao direcao)
         {
             var x = this.Atuador.X;
@@ -122,6 +179,5 @@ namespace MultiAgentes.Lib.Core
             this.Atuador = this.Posicoes[x, y];
             return this.Atuador;
         }
-
     }
 }

@@ -1,14 +1,26 @@
-﻿using MultiAgentes.Lib.Core;
-using MultiAgentes.Lib.Services;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace MultiAgentes.Lib
+﻿namespace MultiAgentes.Lib
 {
+    using MultiAgentes.Lib.Core;
+    using MultiAgentes.Lib.Services;
+    using System;
+
+    /// <summary>
+    /// Defines the <see cref="Util" />.
+    /// </summary>
     public static class Util
     {
+        /// <summary>
+        /// The Parse.
+        /// </summary>
+        /// <param name="posicao">The posicao<see cref="Posicao"/>.</param>
+        /// <returns>The <see cref="Posicionamento"/>.</returns>
         public static Posicionamento Parse(this Posicao posicao) => new Posicionamento(posicao.X, posicao.Y, posicao.Limpo);
+
+        /// <summary>
+        /// The GetNumero.
+        /// </summary>
+        /// <param name="max">The max<see cref="int"/>.</param>
+        /// <returns>The <see cref="int"/>.</returns>
         public static int GetNumero(int max)
         {
             var random = new Random();
@@ -17,6 +29,10 @@ namespace MultiAgentes.Lib
             return numero;
         }
 
+        /// <summary>
+        /// The MovimentoAleatorio.
+        /// </summary>
+        /// <returns>The <see cref="Direcao"/>.</returns>
         public static Direcao MovimentoAleatorio()
         {
             var prox = new Random().Next(1, 5);
@@ -41,6 +57,15 @@ namespace MultiAgentes.Lib
                     return Direcao.DIREITA;
             }
         }
+
+        /// <summary>
+        /// The MovimentoDirecionado.
+        /// </summary>
+        /// <param name="desejadaX">The desejadaX<see cref="int"/>.</param>
+        /// <param name="desejadaY">The desejadaY<see cref="int"/>.</param>
+        /// <param name="atualX">The atualX<see cref="int"/>.</param>
+        /// <param name="atualY">The atualY<see cref="int"/>.</param>
+        /// <returns>The <see cref="Direcao"/>.</returns>
         public static Direcao MovimentoDirecionado(int desejadaX, int desejadaY, int atualX, int atualY)
         {
             var difX = atualX - desejadaX;

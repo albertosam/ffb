@@ -1,19 +1,42 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace MultiAgentes.Lib.Core
+﻿namespace MultiAgentes.Lib.Core
 {
+    using System.Collections.Generic;
+    using System.Linq;
+
+    /// <summary>
+    /// Defines the <see cref="Simulador" />.
+    /// </summary>
     public class Simulador
     {
+        /// <summary>
+        /// Defines the _logger.
+        /// </summary>
         private Logger _logger = new Logger();
 
+        /// <summary>
+        /// Gets or sets the Ambiente.
+        /// </summary>
         public Ambiente Ambiente { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Agente.
+        /// </summary>
         public Agente Agente { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Perceptor.
+        /// </summary>
         public Perceptor Perceptor { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Benchmarks.
+        /// </summary>
         public List<AgenteStats> Benchmarks { get; set; } = new List<AgenteStats>();
 
+        /// <summary>
+        /// The Inicializar.
+        /// </summary>
+        /// <param name="dimensao">The dimensao<see cref="int"/>.</param>
         public void Inicializar(int dimensao)
         {
             _logger.Novo("Simulação");
@@ -24,6 +47,9 @@ namespace MultiAgentes.Lib.Core
             Perceptor = Ambiente.GetAgentePerceptor();
         }
 
+        /// <summary>
+        /// The InicializarAmbienteControlado.
+        /// </summary>
         public void InicializarAmbienteControlado()
         {
             var dimensao = 5;
@@ -39,6 +65,11 @@ namespace MultiAgentes.Lib.Core
             Perceptor = Ambiente.GetAgentePerceptor();
         }
 
+        /// <summary>
+        /// The RegistrarAgente.
+        /// </summary>
+        /// <param name="codigo">The codigo<see cref="string"/>.</param>
+        /// <returns>The <see cref="Posicao"/>.</returns>
         public Posicao RegistrarAgente(string codigo)
         {
             switch (codigo)
@@ -69,6 +100,11 @@ namespace MultiAgentes.Lib.Core
             return posicao;
         }
 
+        /// <summary>
+        /// The Mover.
+        /// </summary>
+        /// <param name="direcao">The direcao<see cref="Direcao"/>.</param>
+        /// <returns>The <see cref="Posicao"/>.</returns>
         public Posicao Mover(Direcao direcao)
         {
             var posicao = Ambiente.Movimentar(direcao);
@@ -76,6 +112,10 @@ namespace MultiAgentes.Lib.Core
             return posicao;
         }
 
+        /// <summary>
+        /// The ProximaPosicao.
+        /// </summary>
+        /// <returns>The <see cref="Posicao"/>.</returns>
         public Posicao ProximaPosicao()
         {
             if (Perceptor.TudoLimpo())
@@ -90,6 +130,9 @@ namespace MultiAgentes.Lib.Core
             return posicao;
         }
 
+        /// <summary>
+        /// The Backup.
+        /// </summary>
         public void Backup()
         {
             Benchmarks.Add(new AgenteStats
@@ -101,11 +144,20 @@ namespace MultiAgentes.Lib.Core
             });
         }
 
+        /// <summary>
+        /// The PosicaoAtuador.
+        /// </summary>
+        /// <returns>The <see cref="Posicao"/>.</returns>
         public Posicao PosicaoAtuador()
         {
             return Ambiente.Atuador;
         }
 
+        /// <summary>
+        /// The Limpar.
+        /// </summary>
+        /// <param name="x">The x<see cref="int"/>.</param>
+        /// <param name="y">The y<see cref="int"/>.</param>
         public void Limpar(int x, int y)
         {
             //var posicao = Ambiente.GetPosicao(x, y);
@@ -117,22 +169,38 @@ namespace MultiAgentes.Lib.Core
             _logger.Log($"Posição [{x},{y}] limpa");
         }
 
+        /// <summary>
+        /// The GetLogs.
+        /// </summary>
+        /// <returns>The <see cref="List{string}"/>.</returns>
         public List<string> GetLogs()
         {
             var mensgens = _logger.Logs.SelectMany(a => a.Mensagens).ToList();
             return mensgens;
         }
 
+        /// <summary>
+        /// The AgenteAleatorio.
+        /// </summary>
+        /// <returns>The <see cref="Agente"/>.</returns>
         public Agente AgenteAleatorio()
         {
             return new AgenteAleatorio(this.Ambiente) { Nome = "Agente Aleatório" };
         }
 
+        /// <summary>
+        /// The AgenteComSensor.
+        /// </summary>
+        /// <returns>The <see cref="Agente"/>.</returns>
         public Agente AgenteComSensor()
         {
             return new AgenteComSensor(this.Ambiente) { Nome = "Agente Com Sensor" };
         }
 
+        /// <summary>
+        /// The AgenteDirecionado.
+        /// </summary>
+        /// <returns>The <see cref="Agente"/>.</returns>
         public Agente AgenteDirecionado()
         {
             return new AgenteDirecionado(this.Ambiente) { Nome = "Agente Direcionado" };

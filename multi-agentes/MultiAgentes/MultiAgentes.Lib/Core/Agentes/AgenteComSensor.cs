@@ -1,16 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace MultiAgentes.Lib.Core
+﻿namespace MultiAgentes.Lib.Core
 {
+    using System.Collections.Generic;
+    using System.Linq;
+
+    /// <summary>
+    /// Defines the <see cref="AgenteComSensor" />.
+    /// </summary>
     public class AgenteComSensor : Agente
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AgenteComSensor"/> class.
+        /// </summary>
+        /// <param name="ambiente">The ambiente<see cref="Ambiente"/>.</param>
         public AgenteComSensor(Ambiente ambiente) : base(ambiente)
         {
         }
 
+        /// <summary>
+        /// The GetDirecao.
+        /// </summary>
+        /// <returns>The <see cref="Direcao"/>.</returns>
         public override Direcao GetDirecao()
         {
             List<Direcao> direcoes = new List<Direcao>
@@ -31,6 +40,12 @@ namespace MultiAgentes.Lib.Core
             return Util.MovimentoAleatorio();
         }
 
+        /// <summary>
+        /// The VerificarSituacao.
+        /// </summary>
+        /// <param name="posicao">The posicao<see cref="Posicao"/>.</param>
+        /// <param name="movimento">The movimento<see cref="Direcao"/>.</param>
+        /// <returns>The <see cref="Direcao"/>.</returns>
         private Direcao VerificarSituacao(Posicao posicao, Direcao movimento) => posicao != null && !posicao.Limpo ? movimento : Direcao.PARADO;
     }
 }
