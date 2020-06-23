@@ -12,7 +12,7 @@ namespace MultiAgentes.Lib
         public static int GetNumero(int max)
         {
             var random = new Random();
-            var numero = random.Next(0, max-1);
+            var numero = random.Next(0, max - 1);
 
             return numero;
         }
@@ -40,6 +40,34 @@ namespace MultiAgentes.Lib
                 default:
                     return Direcao.DIREITA;
             }
+        }
+        public static Direcao MovimentoDirecionado(int desejadaX, int desejadaY, int atualX, int atualY)
+        {
+            var difX = atualX - desejadaX;
+            var difY = atualY - desejadaY;
+
+            Direcao direcao = Direcao.PARADO;
+            if (difX < 0)
+            {
+                direcao = Direcao.DESCER;
+            }
+            else if (difX > 0)
+            {
+                direcao = Direcao.SUBIR;
+            }
+            else
+            {
+                if (difY < 0)
+                {
+                    direcao = Direcao.DIREITA;
+                }
+                else if (difY > 0)
+                {
+                    direcao = Direcao.ESQUERDA;
+                }
+            }
+
+            return direcao;
         }
     }
 }

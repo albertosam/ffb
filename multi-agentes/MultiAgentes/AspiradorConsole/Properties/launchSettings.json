@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "AspiradorConsole": {
+      "commandName": "Project",
+      "commandLineArgs": "A"
+    }
+  }
+}

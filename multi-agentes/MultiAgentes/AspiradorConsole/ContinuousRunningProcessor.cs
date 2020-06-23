@@ -15,11 +15,11 @@ namespace AspiradorConsole
         private static readonly System.Threading.AutoResetEvent _closingEvent = new System.Threading.AutoResetEvent(false);
         private readonly IConsolePrinter consolePrinter;
         private readonly Microsoft.Extensions.Logging.ILogger<ContinuousRunningProcessor> logger;
-        private readonly Controladora controladora;
+        private readonly Controlador controladora;
 
         public ContinuousRunningProcessor(IConsolePrinter consolePrinter,
                 Microsoft.Extensions.Logging.ILogger<ContinuousRunningProcessor> logger,
-                Controladora controladora)
+                Controlador controladora)
         {
             this.consolePrinter = consolePrinter;
             this.logger = logger;
@@ -38,9 +38,7 @@ namespace AspiradorConsole
 
                 while (!controladora.AmbienteLimpo)
                 {
-                    controladora.MovimentarELimpar();
-
-                    consolePrinter.Print(++count);
+                    controladora.MovimentarELimpar();                    
                 }
             });
 

@@ -12,7 +12,7 @@ namespace MultiAgentes.Lib.Core
         public Ambiente Ambiente { get; set; }
         public Agente Agente { get; set; }
         public Perceptor Perceptor { get; set; }
-        public List<AgenteBenchmark> Benchmarks { get; set; } = new List<AgenteBenchmark>();
+        public List<AgenteStats> Benchmarks { get; set; } = new List<AgenteStats>();
 
         public void Inicializar(int dimensao)
         {
@@ -39,9 +39,24 @@ namespace MultiAgentes.Lib.Core
             Perceptor = Ambiente.GetAgentePerceptor();
         }
 
-        public Posicao RegistrarAgente(string nome)
+        public Posicao RegistrarAgente(string codigo)
         {
-            Agente = nome == "A" ? AgenteAleatorio() : AgenteComSensor();
+            switch (codigo)
+            {
+                case "A":
+                    Agente = AgenteAleatorio();
+                    break;
+                case "B":
+                    Agente = AgenteComSensor();
+                    break;
+                case "C":
+                    Agente = AgenteDirecionado();
+                    break;
+
+                default:
+                    Agente = AgenteAleatorio();
+                    break;
+            }
 
             //var x = Util.GetNumero(Ambiente.Dimensao);
             //var y = Util.GetNumero(Ambiente.Dimensao);
@@ -50,7 +65,7 @@ namespace MultiAgentes.Lib.Core
             var posicao = Ambiente.SetPosicaoAgente(1, 2);
             this.Agente.Atual = posicao;
 
-            _logger.Log($"{nome} posicionado em [{posicao.X}, {posicao.Y}]");
+            _logger.Log($"{Agente.Nome} posicionado em [{posicao.X}, {posicao.Y}]");
             return posicao;
         }
 
@@ -77,11 +92,12 @@ namespace MultiAgentes.Lib.Core
 
         public void Backup()
         {
-            Benchmarks.Add(new AgenteBenchmark
+            Benchmarks.Add(new AgenteStats
             {
                 Nome = Agente.Nome,
                 Limpezas = Agente.Limpezas,
-                Movimentos = Agente.Movimentacoes
+                Movimentos = Agente.Movimentacoes,
+                Historico = Agente.Movimentos.Select(a => $" {a.Direcao} -> [{a.X}, {a.Y}] ").ToList()
             });
         }
 
@@ -115,6 +131,11 @@ namespace MultiAgentes.Lib.Core
         public Agente AgenteComSensor()
         {
             return new AgenteComSensor(this.Ambiente) { Nome = "Agente Com Sensor" };
+        }
+
+        public Agente AgenteDirecionado()
+        {
+            return new AgenteDirecionado(this.Ambiente) { Nome = "Agente Direcionado" };
         }
     }
 }

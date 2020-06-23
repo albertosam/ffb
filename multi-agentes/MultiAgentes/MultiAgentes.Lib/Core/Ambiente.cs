@@ -69,7 +69,6 @@ namespace MultiAgentes.Lib.Core
             return null;
         }
 
-
         public void Sujar(int x, int y)
         {
             this.Posicoes[x, y].Limpo = false;

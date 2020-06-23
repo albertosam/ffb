@@ -15,7 +15,7 @@ namespace AspiradorConsole
                                  .AddLogging()
                                  .AddSingleton<IConsolePrinter, ConsolePrinter>()
                                  .AddSingleton<ContinuousRunningProcessor>()
-                                 .AddSingleton<Controladora>();
+                                 .AddSingleton<Controlador>();
 
             services.AddHttpClient<ICentralClient, CentralClient>();
             services.Configure<Microsoft.Extensions.Logging.LoggerFilterOptions>(c => c.MinLevel = LogLevel.Trace);

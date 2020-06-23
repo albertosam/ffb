@@ -9,14 +9,14 @@ using Direcao = MultiAgentes.Lib.Core.Direcao;
 
 namespace AspiradorConsole
 {
-    internal class Controladora
+    internal class Controlador
     {
         private readonly ICentralClient centralClient;
         private readonly IConsolePrinter consolePrinter;
         Posicionamento posicao;
         public bool AmbienteLimpo { get; set; } = false;
 
-        public Controladora(ICentralClient centralClient, IConsolePrinter consolePrinter)
+        public Controlador(ICentralClient centralClient, IConsolePrinter consolePrinter)
         {
             this.centralClient = centralClient;
             this.consolePrinter = consolePrinter;

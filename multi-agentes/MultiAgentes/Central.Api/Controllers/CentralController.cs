@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MultiAgentes.Lib;
+using MultiAgentes.Lib.Core;
+using MultiAgentes.Lib.Services;
 
 namespace Central.Api.Controllers
 {
@@ -14,69 +16,99 @@ namespace Central.Api.Controllers
     [Route("[controller]")]
     public class CentralController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
 
         private readonly ILogger<CentralController> _logger;
 
-        public Simulacao Simulacao { get; }
-        public ICentralMemoria CentralMemoria { get; }
+        public Simulador Simulador { get; }
 
-        public CentralController(ILogger<CentralController> logger, Simulacao simulacao,
-            ICentralMemoria centralMemoria)
+        public CentralController(ILogger<CentralController> logger, Simulador simulador)
         {
             _logger = logger;
-            Simulacao = simulacao;
-            CentralMemoria = centralMemoria;
+            Simulador = simulador;
         }
 
-        [HttpGet("iniciar")]
-        public IActionResult PostIniciar([FromQuery] int d, [FromQuery] int s)
-        {
-            CentralMemoria.Inicializar();
-            return Ok();
-        }
-
+        /// <summary>
+        /// Registra o aspirador a central de comando.
+        /// Informações de ambiente são carregadas e realizada marcações sobe posições sujas.
+        /// </summary>
+        /// <param name="nome"></param>
+        /// <returns></returns>
         [HttpPost("registrar")]
-        public Task<IPosicao> PostRegistrar([FromBody] string nome)
+        public Task<Posicionamento> PostRegistrar([FromBody] string nome)
         {
-            var posicao = CentralMemoria.RegistrarAspirador(nome);
-            return Task.FromResult(posicao);
+            // inicializa simulador
+            // carregando informações do ambiente e do agente
+            Simulador.InicializarAmbienteControlado();
+
+            var posicao = Simulador.RegistrarAgente(nome);
+            return Task.FromResult(posicao.Parse());
         }
 
+        /// <summary>
+        /// Posição atual do aspirador
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("posicao")]
+        public Task<Posicionamento> Posicao()
+        {
+            var posicao = Simulador.PosicaoAtuador();
+            return Task.FromResult(posicao.Parse());
+        }
+
+        /// <summary>
+        /// Obtém proxima posição a ser assumida
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("proximaPosicao")]
-        public Task<IPosicao> ProximaPosicao()
+        public Task<Posicionamento> ProximaPosicao()
         {
-            var posicao = CentralMemoria.GetProximaPosicao();
-            return Task.FromResult(posicao);
+            var posicao = Simulador.ProximaPosicao();
+            return Task.FromResult(posicao?.Parse());
         }
 
+        /// <summary>
+        /// Realiza movimento
+        /// </summary>
+        /// <param name="direcao"></param>
+        /// <returns></returns>
         [HttpPost("movimentar")]
-        public Task<IPosicao> Movimentar([FromBody]int direcao)
+        public Task<Posicionamento> Movimentar([FromBody] int direcao)
         {
-            var posicao = CentralMemoria.Movimentar((MultiAgentes.Lib.Enumeradores.Direcao)direcao);
-            return Task.FromResult(posicao);
+            var posicao = Simulador.Mover((Direcao)direcao);
+            return Task.FromResult(posicao.Parse());
         }
 
+
+        /// <summary>
+        /// Informa limpeza de posição
+        /// </summary>
+        /// <param name="posicao"></param>
         [HttpPost("limpar")]
-        public void Movimentar([FromBody] Posicao posicao)
+        public void Limpar([FromBody] Posicionamento posicao)
         {
-            CentralMemoria.Limpar(posicao);
+            Simulador.Limpar(posicao.X, posicao.Y);
         }
 
-        [HttpGet("localizacao")]
-        public IEnumerable<WeatherForecast> Get()
+        /// <summary>
+        /// Logs registrados
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("log")]
+        public List<string> Log()
         {
-            var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
-            })
-            .ToArray();
+            return Simulador.GetLogs();
         }
+
+        /// <summary>
+        /// Informações sobre perfomance registradas nas simulações
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("stats")]
+        public List<AgenteStats> Stats()
+        {
+            return Simulador.Benchmarks;
+        }
+
     }
+
 }
